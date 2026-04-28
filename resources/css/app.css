@@ -1,0 +1,226 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    --font-sans: var(--font-sans);
+    --font-mono: var(--font-mono);
+    --font-serif: var(--font-serif);
+
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+
+    --shadow-2xs: var(--shadow-2xs);
+    --shadow-xs: var(--shadow-xs);
+    --shadow-sm: var(--shadow-sm);
+    --shadow: var(--shadow);
+    --shadow-md: var(--shadow-md);
+    --shadow-lg: var(--shadow-lg);
+    --shadow-xl: var(--shadow-xl);
+    --shadow-2xl: var(--shadow-2xl);
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+@layer utilities {
+    body,
+    html {
+        --font-sans:
+            'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+            'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+            'Noto Color Emoji';
+    }
+}
+
+:root {
+    --background: hsl(200 100% 98.8235%);
+    --foreground: hsl(188.8889 81.8182% 6.4706%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(188.8889 81.8182% 6.4706%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(240 30% 15.6863%);
+    --primary: hsl(175.0198 181.4518% 26.0563%);
+    --primary-foreground: hsl(0 0% 98.8235%);
+    --secondary: hsl(180 35% 92.1569%);
+    --secondary-foreground: hsl(189.2308 30.2326% 25.2941%);
+    --muted: hsl(180 29.0323% 93.9216%);
+    --muted-foreground: hsl(190.3448 15.3439% 37.0588%);
+    --accent: hsl(160.9756 51.8987% 84.5098%);
+    --accent-foreground: hsl(180 100% 19.4118%);
+    --destructive: hsl(1.8605 56.8282% 55.4902%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --border: hsl(186 15.625% 87.451%);
+    --input: hsl(186 15.625% 87.451%);
+    --ring: hsl(175.0198 181.4518% 26.0563%);
+    --chart-1: hsl(175.0198 181.4518% 26.0563%);
+    --chart-2: hsl(194.5116 100% 42.1569%);
+    --chart-3: hsl(259.4737 98.2759% 77.2549%);
+    --chart-4: hsl(34.8529 100% 73.3333%);
+    --chart-5: hsl(92.9412 52.5773% 80.9804%);
+    --sidebar: hsl(192 33.3333% 97.0588%);
+    --sidebar-foreground: hsl(188.5714 50% 10.9804%);
+    --sidebar-primary: hsl(175.0198 181.4518% 26.0563%);
+    --sidebar-primary-foreground: hsl(240 42.8571% 98.6275%);
+    --sidebar-accent: hsl(160.9756 51.8987% 84.5098%);
+    --sidebar-accent-foreground: hsl(240 30% 15.6863%);
+    --sidebar-border: hsl(183 32.2581% 87.8431%);
+    --sidebar-ring: hsl(250.8108 53.11% 59.0196%);
+    --font-sans: Inter, sans-serif;
+    --font-serif: Georgia, serif;
+    --font-mono: JetBrains Mono, monospace;
+    --radius: 0.5rem;
+    --shadow-x: 0px;
+    --shadow-y: 4px;
+    --shadow-blur: 10px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0.12;
+    --shadow-color: #2d2d53;
+    --shadow-2xs: 0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.06);
+    --shadow-xs: 0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.06);
+    --shadow-sm:
+        0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.12),
+        0px 1px 2px -1px hsl(240 29.6875% 25.098% / 0.12);
+    --shadow:
+        0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.12),
+        0px 1px 2px -1px hsl(240 29.6875% 25.098% / 0.12);
+    --shadow-md:
+        0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.12),
+        0px 2px 4px -1px hsl(240 29.6875% 25.098% / 0.12);
+    --shadow-lg:
+        0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.12),
+        0px 4px 6px -1px hsl(240 29.6875% 25.098% / 0.12);
+    --shadow-xl:
+        0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.12),
+        0px 8px 10px -1px hsl(240 29.6875% 25.098% / 0.12);
+    --shadow-2xl: 0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.3);
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
+}
+
+.dark {
+    --background: hsl(180 57.1429% 2.7451%);
+    --foreground: hsl(186 22.7273% 91.3725%);
+    --card: hsl(184 55.5556% 5.2941%);
+    --card-foreground: hsl(186 22.7273% 91.3725%);
+    --popover: hsl(235.7143 24.1379% 11.3725%);
+    --popover-foreground: hsl(240 42.8571% 93.1373%);
+    --primary: hsl(175.0198 181.4518% 26.0563%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(182.3077 54.1667% 9.4118%);
+    --secondary-foreground: hsl(182.069 25.6637% 77.8431%);
+    --muted: hsl(184 33.3333% 8.8235%);
+    --muted-foreground: hsl(182.1429 11.7647% 53.3333%);
+    --accent: hsl(176.8538 115.911% 17.2823%);
+    --accent-foreground: hsl(180 35.3659% 67.8431%);
+    --destructive: hsl(0 92.5134% 63.3333%);
+    --destructive-foreground: hsl(240 42.8571% 98.6275%);
+    --border: hsl(184 27.2727% 10.7843%);
+    --input: hsl(184 27.2727% 10.7843%);
+    --ring: hsl(175.0198 181.4518% 26.0563%);
+    --chart-1: hsl(175.0198 181.4518% 26.0563%);
+    --chart-2: hsl(194.5116 100% 42.1569%);
+    --chart-3: hsl(259.4737 98.2759% 77.2549%);
+    --chart-4: hsl(34.8529 100% 73.3333%);
+    --chart-5: hsl(92.9412 52.5773% 80.9804%);
+    --sidebar: hsl(184.2857 70% 3.9216%);
+    --sidebar-foreground: hsl(186 22.7273% 91.3725%);
+    --sidebar-primary: hsl(175.0198 181.4518% 26.0563%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(176.8538 115.911% 17.2823%);
+    --sidebar-accent-foreground: hsl(240 42.8571% 93.1373%);
+    --sidebar-border: hsl(237 18.8679% 20.7843%);
+    --sidebar-ring: hsl(249.1892 100% 78.2353%);
+    --font-sans: Inter, sans-serif;
+    --font-serif: Georgia, serif;
+    --font-mono: JetBrains Mono, monospace;
+    --radius: 0.5rem;
+    --shadow-x: 0px;
+    --shadow-y: 4px;
+    --shadow-blur: 10px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0.12;
+    --shadow-color: #2d2d53;
+    --shadow-2xs: 0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.06);
+    --shadow-xs: 0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.06);
+    --shadow-sm:
+        0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.12),
+        0px 1px 2px -1px hsl(240 29.6875% 25.098% / 0.12);
+    --shadow:
+        0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.12),
+        0px 1px 2px -1px hsl(240 29.6875% 25.098% / 0.12);
+    --shadow-md:
+        0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.12),
+        0px 2px 4px -1px hsl(240 29.6875% 25.098% / 0.12);
+    --shadow-lg:
+        0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.12),
+        0px 4px 6px -1px hsl(240 29.6875% 25.098% / 0.12);
+    --shadow-xl:
+        0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.12),
+        0px 8px 10px -1px hsl(240 29.6875% 25.098% / 0.12);
+    --shadow-2xl: 0px 4px 10px 0px hsl(240 29.6875% 25.098% / 0.3);
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
