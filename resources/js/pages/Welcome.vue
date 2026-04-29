@@ -1,6 +1,12 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
-import { dashboard, login, register } from '@/routes';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { Head } from '@inertiajs/vue3';
+
+import Aside from '@/components/landing/Aside.vue';
+import Nav from '@/components/landing/Nav.vue';
+import Hero from '@/components/landing/Hero.vue';
+import CoreSystem from '@/components/landing/CoreSystem.vue';
+import Footer from '@/components/landing/Footer.vue';
 
 withDefaults(
     defineProps<{
@@ -10,18 +16,40 @@ withDefaults(
         canRegister: true,
     },
 );
+
+const mounted = ref(false);
+const mousePos = ref({ x: 0, y: 0 });
+
+const handleMouseMove = (e: MouseEvent) => {
+    mousePos.value = { x: e.clientX, y: e.clientY };
+};
+
+onMounted(() => {
+    mounted.value = true;
+    window.addEventListener('mousemove', handleMouseMove);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('mousemove', handleMouseMove);
+});
 </script>
 
 <template>
-    <Head title="Welcome">
-        <link rel="preconnect" href="https://rsms.me/" />
-        <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-    </Head>
+    <Head title="TheReviewer" />
+
     <div
-        class="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]"
+        class="relative min-h-screen overflow-hidden bg-background font-sans text-primary selection:bg-accent/40"
     >
-        <h1 class="text-3xl font-bold text-muted-foreground">
-            Welcome to My App
-        </h1>
+        <div class="grid-lines pointer-events-none absolute inset-0 z-0" />
+
+        <Aside />
+
+        <Nav />
+
+        <Hero />
+
+        <CoreSystem />
+
+        <Footer />
     </div>
 </template>
