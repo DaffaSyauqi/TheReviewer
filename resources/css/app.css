@@ -224,3 +224,35 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* ::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+}
+
+.maplibregl-ctrl-group {
+    border-radius: var(--radius) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1) !important;
+}
+
+.maplibregl-ctrl-group button {
+    border-bottom: 1px solid hsl(var(--border)) !important;
+}
+
+.maplibregl-ctrl-group button:last-child {
+    border-bottom: none !important;
+}
+
+.maplibregl-ctrl-attrib {
+    font-size: 10px !important;
+    background: hsl(var(--background) / 0.85) !important;
+    backdrop-filter: blur(4px);
+    border-radius: var(--radius) !important;
+} */
