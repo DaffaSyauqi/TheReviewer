@@ -1,5 +1,9 @@
 <template>
+    <Head title="Review" />
+
     <div class="relative h-screen w-full overflow-hidden">
+        <NavBar />
+
         <Map
             :center="[117.0, -2.5]"
             :zoom="5"
@@ -22,7 +26,7 @@
         <Transition name="fade">
             <div
                 v-if="isLoadingData"
-                class="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-background/70 backdrop-blur-sm"
+                class="pointer-events-none absolute inset-0 z-40 flex items-center justify-center bg-background/70 backdrop-blur-sm"
             >
                 <div class="flex flex-col items-center gap-3">
                     <div
@@ -38,7 +42,7 @@
         <Transition name="fade">
             <div
                 v-if="loadError"
-                class="absolute bottom-6 left-1/2 z-20 -translate-x-1/2 rounded-lg border border-red-200 bg-destructive px-4 py-3 text-sm text-destructive-foreground shadow-md"
+                class="absolute bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-lg border border-red-200 bg-destructive px-4 py-3 text-sm text-destructive-foreground shadow-md"
             >
                 {{ loadError }}
             </div>
@@ -57,10 +61,10 @@
             </div>
         </Transition>
 
-        <Transition name="slide-right">
+        <Transition name="slide-left">
             <aside
                 v-if="selectedRegion"
-                class="absolute top-0 right-0 z-10 flex h-full w-80 flex-col border-l bg-background shadow-xl"
+                class="absolute top-0 left-0 z-20 flex h-full w-80 flex-col border-l bg-background shadow-xl"
             >
                 <div
                     class="flex shrink-0 items-start justify-between gap-3 border-b px-5 py-4"
@@ -120,8 +124,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { Head } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-vue-next';
+import NavBar from '@/components/NavBar.vue';
 import { Map } from '@/components/map';
 import { MapIndonesia } from '@/components/map';
 
@@ -146,13 +152,14 @@ function closeSidebar() {
 </script>
 
 <style scoped>
-.slide-right-enter-active,
-.slide-right-leave-active {
+.slide-left-enter-active,
+.slide-left-leave-active {
     transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.slide-right-enter-from,
-.slide-right-leave-to {
-    transform: translateX(100%);
+
+.slide-left-enter-from,
+.slide-left-leave-to {
+    transform: translateX(-100%);
 }
 
 .fade-enter-active,
