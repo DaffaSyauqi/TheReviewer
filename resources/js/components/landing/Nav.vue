@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
 import { MapPinned } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 </script>
@@ -21,11 +22,13 @@ import { Button } from '@/components/ui/button';
             >
         </div>
 
-        <Button
-            variant="outline"
-            class="h-auto rounded-none border-none bg-foreground px-4 py-2 text-[10px] font-bold tracking-widest text-primary uppercase shadow-[4px_4px_0_var(--color-accent)] transition-all duration-300 hover:bg-accent hover:text-primary hover:shadow-none sm:px-6 sm:py-2"
-        >
-            Launch_Map
-        </Button>
+        <Link href="/review">
+            <Button
+                variant="outline"
+                class="h-auto rounded-none border-none bg-foreground px-4 py-2 text-[10px] font-bold tracking-widest text-primary uppercase shadow-[4px_4px_0_var(--color-accent)] transition-all duration-300 hover:bg-accent hover:text-primary hover:shadow-none sm:px-6 sm:py-2"
+            >
+                Launch_Map
+            </Button>
+        </Link>
     </nav>
 </template>

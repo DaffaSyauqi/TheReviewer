@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import PlanetIlusstration from '@/components/landing/PlanetIlusstration.vue';
 </script>
@@ -29,11 +30,13 @@ import PlanetIlusstration from '@/components/landing/PlanetIlusstration.vue';
                 </div>
 
                 <div class="flex flex-col flex-wrap gap-4 sm:flex-row sm:gap-6">
-                    <Button
-                        class="relative h-auto w-full justify-center overflow-hidden rounded-none bg-foreground px-6 py-4 text-xs font-black tracking-[0.2em] text-accent uppercase shadow-[4px_4px_0_var(--color-accent)] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:bg-foreground hover:text-accent hover:shadow-[8px_8px_0_var(--color-accent)] sm:w-auto sm:px-10 sm:py-5 sm:shadow-[8px_8px_0_var(--color-accent)] sm:hover:shadow-[12px_12px_0_var(--color-accent)]"
-                    >
-                        EXPLORE_MAP
-                    </Button>
+                    <Link href="/review">
+                        <Button
+                            class="relative h-auto w-full justify-center overflow-hidden rounded-none bg-foreground px-6 py-4 text-xs font-black tracking-[0.2em] text-accent uppercase shadow-[4px_4px_0_var(--color-accent)] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:bg-foreground hover:text-accent hover:shadow-[8px_8px_0_var(--color-accent)] sm:w-auto sm:px-10 sm:py-5 sm:shadow-[8px_8px_0_var(--color-accent)] sm:hover:shadow-[12px_12px_0_var(--color-accent)]"
+                        >
+                            EXPLORE_MAP
+                        </Button>
+                    </Link>
                     <Button
                         variant="outline"
                         class="h-auto w-full justify-center rounded-none border-2 border-foreground bg-transparent px-6 py-4 text-xs font-black tracking-[0.2em] text-primary uppercase shadow-none transition-colors hover:bg-foreground/5 hover:text-primary hover:shadow-none sm:w-auto sm:px-10 sm:py-5"
