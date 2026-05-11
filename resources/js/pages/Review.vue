@@ -13,7 +13,7 @@
                 [93.0, -12.0],
                 [142.0, 7.5],
             ]"
-            class="absolute inset-0 !rounded-none !border-none"
+            class="absolute inset-0 rounded-none! border-none!"
         >
             <MapIndonesia
                 @region-click="onRegionClick"
