@@ -9,7 +9,7 @@ Route::inertia('/', 'Welcome', [
 
 Route::inertia('/review', 'Review')->name('review');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 });
 
