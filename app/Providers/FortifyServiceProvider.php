@@ -6,6 +6,7 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -31,6 +32,19 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+
+        Fortify::authenticateUsing(function (Request $request) {
+            if (Auth::attempt($request->only(Fortify::username(), 'password'), $request->boolean('remember'))) {
+                return Auth::user();
+            }
+
+            return null;
+        });
+
+        Fortify::redirects('login', function (Request $request) {
+            $user = Auth::user();
+            return $user->role === 'admin' ? '/dashboard' : '/review';
+        });
     }
 
     /**
