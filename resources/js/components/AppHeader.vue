@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
+import {
+    BookOpen,
+    Folder,
+    LayoutDashboard,
+    Menu,
+    Search,
+} from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
@@ -31,6 +37,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
+import AdminMenuContent from '@/components/AdminMenuContent.vue';
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { getInitials } from '@/composables/useInitials';
@@ -57,7 +64,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
-        icon: LayoutGrid,
+        icon: LayoutDashboard,
     },
 ];
 </script>
@@ -116,7 +123,7 @@ const mainNavItems: NavItem[] = [
                     </Sheet>
                 </div>
 
-                <Link :href="dashboard()" class="flex items-center gap-x-2">
+                <Link href="/review" class="flex items-center gap-x-2">
                     <AppLogo />
                 </Link>
 
@@ -164,10 +171,10 @@ const mainNavItems: NavItem[] = [
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                class="relative size-10 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary"
+                                class="relative size-12 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary"
                             >
                                 <Avatar
-                                    class="size-8 overflow-hidden rounded-full"
+                                    class="size-10 overflow-hidden rounded-full"
                                 >
                                     <AvatarImage
                                         v-if="auth.user.avatar"
@@ -183,7 +190,11 @@ const mainNavItems: NavItem[] = [
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" class="w-56">
-                            <UserMenuContent :user="auth.user" />
+                            <AdminMenuContent
+                                v-if="auth.user.role === 'admin'"
+                                :user="auth.user"
+                            />
+                            <UserMenuContent v-else :user="auth.user" />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
