@@ -74,7 +74,7 @@ const mainNavItems: NavItem[] = [
         <div class="border-b border-sidebar-border/80">
             <div class="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
                 <!-- Mobile Menu -->
-                <div class="lg:hidden">
+                <div v-if="auth.user?.role === 'admin'" class="lg:hidden">
                     <Sheet>
                         <SheetTrigger :as-child="true">
                             <Button
@@ -128,7 +128,10 @@ const mainNavItems: NavItem[] = [
                 </Link>
 
                 <!-- Desktop Menu -->
-                <div class="hidden h-full lg:flex lg:flex-1">
+                <div
+                    v-if="auth.user?.role === 'admin'"
+                    class="hidden h-full lg:flex lg:flex-1"
+                >
                     <NavigationMenu class="ml-10 flex h-full items-stretch">
                         <NavigationMenuList
                             class="flex h-full items-stretch space-x-2"
