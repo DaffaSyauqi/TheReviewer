@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,7 +15,11 @@ class PlacesController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('manage-places/Add');
+        $categories = Category::all();
+
+        return Inertia::render('manage-places/Add', [
+            'categories' => $categories,
+        ]);
     }
 
     public function store()
@@ -24,8 +29,11 @@ class PlacesController extends Controller
 
     public function edit($id): Response
     {
+        $categories = Category::all();
+
         return Inertia::render('manage-places/Add', [
             'placeId' => $id,
+            'categories' => $categories,
         ]);
     }
 

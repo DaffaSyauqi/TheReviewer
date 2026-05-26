@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Form, Head, Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import * as LucideIcons from 'lucide-vue-next';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ import { Label } from '@/components/ui/label';
 type Props = {
     mustVerifyEmail: boolean;
     status?: string;
+    categories: Array<{ id: number; name: string; slug: string; icon: string | null }>;
 };
 
 defineProps<Props>();
@@ -34,6 +36,11 @@ defineOptions({
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+
+const getIcon = (iconName: string | null) => {
+    if (!iconName) return null;
+    return (LucideIcons as Record<string, any>)[iconName] || null;
+};
 </script>
 
 <template>
@@ -64,15 +71,19 @@ const user = computed(() => page.props.auth.user);
             <div class="grid gap-2">
                 <Label for="category">Category</Label>
                 <Select>
-                    <SelectTrigger class="mt-1 w-full">
+                    <SelectTrigger class="mt-1 w-full" name="category">
                         <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="restaurant"> Restaurant </SelectItem>
-                        <SelectItem value="hotel"> Hotel </SelectItem>
-                        <SelectItem value="tourism"> Tourism </SelectItem>
+                        <SelectItem v-for="category in categories" :key="category.id" :value="category.slug">
+                            <div class="flex items-center gap-2">
+                                <component :is="getIcon(category.icon)" v-if="getIcon(category.icon)" class="h-4 w-4" />
+                                {{ category.name }}
+                            </div>
+                        </SelectItem>
                     </SelectContent>
                 </Select>
+                <InputError class="mt-2" :message="errors.category" />
             </div>
 
             <div class="grid gap-2">
