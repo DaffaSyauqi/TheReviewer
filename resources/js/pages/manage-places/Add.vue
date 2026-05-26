@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Form, Head, Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import * as LucideIcons from 'lucide-vue-next';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
@@ -36,6 +36,7 @@ defineOptions({
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+const selectedCategory = ref<string>('');
 
 const getIcon = (iconName: string | null) => {
     if (!iconName) return null;
@@ -55,7 +56,7 @@ const getIcon = (iconName: string | null) => {
             description="Enter the details of the place you want to add"
         />
 
-        <Form class="space-y-6" v-slot="{ errors, processing }">
+        <Form class="space-y-6" v-slot="{ errors, processing }" method="post" action="/manage-places">
             <div class="grid gap-2">
                 <Label for="placeName">Place Name</Label>
                 <Input
@@ -70,8 +71,8 @@ const getIcon = (iconName: string | null) => {
 
             <div class="grid gap-2">
                 <Label for="category">Category</Label>
-                <Select>
-                    <SelectTrigger class="mt-1 w-full" name="category">
+                <Select v-model="selectedCategory">
+                    <SelectTrigger class="mt-1 w-full">
                         <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -83,6 +84,7 @@ const getIcon = (iconName: string | null) => {
                         </SelectItem>
                     </SelectContent>
                 </Select>
+                <input type="hidden" name="category" :value="selectedCategory" />
                 <InputError class="mt-2" :message="errors.category" />
             </div>
 
@@ -133,7 +135,6 @@ const getIcon = (iconName: string | null) => {
                     id="province"
                     class="mt-1 block w-full"
                     name="province"
-                    required
                     placeholder="Province"
                 />
                 <InputError class="mt-2" :message="errors.province" />
@@ -149,16 +150,15 @@ const getIcon = (iconName: string | null) => {
                     id="country"
                     class="mt-1 block w-full"
                     name="country"
-                    required
                     placeholder="Country"
                 />
                 <InputError class="mt-2" :message="errors.country" />
             </div>
 
             <div class="flex items-center gap-4">
-                <Button :disabled="processing" data-test="update-profile-button"
-                    >Add</Button
-                >
+                <Button :disabled="processing" type="submit">
+                    {{ processing ? 'Creating...' : 'Add Place' }}
+                </Button>
             </div>
         </Form>
     </div>
