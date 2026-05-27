@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import Heading from '@/components/Heading.vue';
-import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/profile';
-import { send } from '@/routes/verification';
+import DataTable from '@/components/places/DataTable.vue';
+import { columns } from '@/components/places/columns';
 
 type Props = {
-    mustVerifyEmail: boolean;
-    status?: string;
+    places: Array<{
+        id: number;
+        name: string;
+        description: string;
+        address: string;
+        city: string;
+        status: 'pending' | 'approved' | 'rejected';
+        created_at: string;
+    }>;
 };
 
 defineProps<Props>();
@@ -22,7 +24,6 @@ defineOptions({
         breadcrumbs: [
             {
                 title: 'Manage Places',
-                href: edit(),
             },
         ],
     },
@@ -43,5 +44,9 @@ const user = computed(() => page.props.auth.user);
             title="Manage Places"
             description="Manage the places, edit or delete them"
         />
+
+        <div class="w-full max-w-6xl">
+            <DataTable :columns="columns" :data="places" />
+        </div>
     </div>
 </template>

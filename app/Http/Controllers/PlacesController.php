@@ -14,7 +14,11 @@ class PlacesController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('manage-places/Manage');
+        $places = Place::where('user_id', auth()->id())->get();
+
+        return Inertia::render('manage-places/Manage', [
+            'places' => $places,
+        ]);
     }
 
     public function create(): Response
@@ -76,7 +80,18 @@ class PlacesController extends Controller
 
     public function destroy($id)
     {
-        // Backend implementation later
+        $place = Place::findOrFail($id);
+
+        if ($place->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+
+        $place->delete();
+
+        return redirect()->route('places.index')->with('toast', [
+            'type' => 'success',
+            'message' => 'Place deleted successfully.',
+        ]);
     }
 }
 
