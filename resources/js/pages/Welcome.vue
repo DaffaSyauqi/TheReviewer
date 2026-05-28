@@ -35,7 +35,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Head title="TheReviewer" />
+    <Head title="Welcome" />
 
     <div
         class="relative min-h-screen overflow-hidden bg-background font-sans text-primary selection:bg-accent/40"

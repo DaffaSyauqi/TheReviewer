@@ -14,3 +14,4 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 });
 
 require __DIR__.'/settings.php';
+require __DIR__.'/manage-places.php';
