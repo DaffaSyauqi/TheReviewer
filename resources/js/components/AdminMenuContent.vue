@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, router } from '@inertiajs/vue3';
-import { LogOut, Settings, LayoutDashboard } from 'lucide-vue-next';
+import { LogOut, Settings, LayoutDashboard, MapPinPlus } from 'lucide-vue-next';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -11,7 +11,6 @@ import UserInfo from '@/components/UserInfo.vue';
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
-import Dashboard from '@/pages/Dashboard.vue';
 
 type Props = {
     user: User;
@@ -42,6 +41,17 @@ defineProps<Props>();
                 Dashboard
             </Link>
         </DropdownMenuItem>
+        <DropdownMenuItem :as-child="true">
+            <Link
+                class="block w-full cursor-pointer"
+                href="/manage-places/index"
+                prefetch
+            >
+                <MapPinPlus class="mr-2 h-4 w-4" />
+                Manage Places
+            </Link>
+        </DropdownMenuItem>
+
         <DropdownMenuItem :as-child="true">
             <Link class="block w-full cursor-pointer" :href="edit()" prefetch>
                 <Settings class="mr-2 h-4 w-4" />
