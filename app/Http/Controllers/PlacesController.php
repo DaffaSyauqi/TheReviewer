@@ -57,10 +57,8 @@ class PlacesController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('places.index')->with('toast', [
-            'type' => 'success',
-            'message' => 'Place created successfully. Awaiting admin approval.',
-        ]);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Place added successfully. Awaiting admin approval.')]);
+        return back();
     }
 
     public function edit($id): Response
@@ -88,10 +86,8 @@ class PlacesController extends Controller
 
         $place->delete();
 
-        return redirect()->route('places.index')->with('toast', [
-            'type' => 'success',
-            'message' => 'Place deleted successfully.',
-        ]);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Place deleted successfully.')]);
+        return back();
     }
 }
 

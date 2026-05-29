@@ -19,7 +19,12 @@ import { Label } from '@/components/ui/label';
 type Props = {
     mustVerifyEmail: boolean;
     status?: string;
-    categories: Array<{ id: number; name: string; slug: string; icon: string | null }>;
+    categories: Array<{
+        id: number;
+        name: string;
+        slug: string;
+        icon: string | null;
+    }>;
 };
 
 defineProps<Props>();
@@ -56,7 +61,14 @@ const getIcon = (iconName: string | null) => {
             description="Enter the details of the place you want to add"
         />
 
-        <Form class="space-y-6" v-slot="{ errors, processing }" method="post" action="/manage-places">
+        <Form
+            class="space-y-6"
+            v-slot="{ errors, processing }"
+            method="post"
+            action="/manage-places"
+            resetOnSuccess
+            @success="selectedCategory = ''"
+        >
             <div class="grid gap-2">
                 <Label for="placeName">Place Name</Label>
                 <Input
@@ -76,15 +88,27 @@ const getIcon = (iconName: string | null) => {
                         <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem v-for="category in categories" :key="category.id" :value="category.slug">
+                        <SelectItem
+                            v-for="category in categories"
+                            :key="category.id"
+                            :value="category.slug"
+                        >
                             <div class="flex items-center gap-2">
-                                <component :is="getIcon(category.icon)" v-if="getIcon(category.icon)" class="h-4 w-4" />
+                                <component
+                                    :is="getIcon(category.icon)"
+                                    v-if="getIcon(category.icon)"
+                                    class="h-4 w-4"
+                                />
                                 {{ category.name }}
                             </div>
                         </SelectItem>
                     </SelectContent>
                 </Select>
-                <input type="hidden" name="category" :value="selectedCategory" />
+                <input
+                    type="hidden"
+                    name="category"
+                    :value="selectedCategory"
+                />
                 <InputError class="mt-2" :message="errors.category" />
             </div>
 

@@ -1,14 +1,8 @@
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-vue-next';
-import { router } from '@inertiajs/vue3';
+import { ArrowUpDown } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import PlaceActions from './PlaceActions.vue';
 
 export interface Place {
     id: number;
@@ -74,39 +68,9 @@ export const columns: ColumnDef<Place>[] = [
         id: 'actions',
         enableHiding: false,
         cell: ({ row }) =>
-            h(
-                DropdownMenu,
-                {},
-                {
-                    default: () => [
-                        h(
-                            DropdownMenuTrigger,
-                            { asChild: true },
-                            () =>
-                                h(
-                                    Button,
-                                    { variant: 'ghost', class: 'h-8 w-8 p-0' },
-                                    () => h(MoreHorizontal, { class: 'h-4 w-4' })
-                                )
-                        ),
-                        h(
-                            DropdownMenuContent,
-                            { align: 'end' },
-                            () =>
-                                h(
-                                    DropdownMenuItem,
-                                    {
-                                        onClick: () => {
-                                            if (confirm('Are you sure you want to delete this place?')) {
-                                                router.delete(`/manage-places/${row.original.id}`);
-                                            }
-                                        },
-                                    },
-                                    () => 'Delete'
-                                )
-                        ),
-                    ],
-                }
-            ),
+            h(PlaceActions, {
+                placeId: row.original.id,
+                placeName: row.original.name,
+            }),
     },
 ];
