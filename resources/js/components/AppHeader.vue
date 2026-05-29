@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import {
-    BookOpen,
-    Folder,
-    LayoutDashboard,
-    Menu,
-    Search,
-} from 'lucide-vue-next';
+import { LayoutDashboard, Menu, MapPinCheck } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
@@ -64,6 +58,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutDashboard,
+    },
+    {
+        title: 'ModerationPlaces',
+        href: '/moderation-places',
+        icon: MapPinCheck,
     },
 ];
 </script>
