@@ -2,9 +2,9 @@ import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { ArrowUpDown } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-import PlaceActions from './PlaceActions.vue';
+import ModerationActions from './ModerationActions.vue';
 
-export interface Place {
+export interface ModerationPlace {
     id: number;
     name: string;
     description: string;
@@ -14,7 +14,7 @@ export interface Place {
     created_at: string;
 }
 
-export const columns: ColumnDef<Place>[] = [
+export const columns: ColumnDef<ModerationPlace>[] = [
     {
         accessorKey: 'name',
         header: ({ column }) =>
@@ -68,7 +68,7 @@ export const columns: ColumnDef<Place>[] = [
         id: 'actions',
         enableHiding: false,
         cell: ({ row }) =>
-            h(PlaceActions, {
+            h(ModerationActions, {
                 placeId: row.original.id,
                 placeName: row.original.name,
             }),
