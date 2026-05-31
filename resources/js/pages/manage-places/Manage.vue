@@ -10,8 +10,13 @@ type Props = {
         id: number;
         name: string;
         description: string;
+        category: string;
         address: string;
         city: string;
+        province?: string;
+        country?: string;
+        latitude?: number | string;
+        longitude?: number | string;
         status: 'pending' | 'approved' | 'rejected';
         created_at: string;
     }>;
@@ -36,13 +41,13 @@ const user = computed(() => page.props.auth.user);
 <template>
     <Head title="Manage Places" />
 
-    <h1 class="sr-only">Manage Places</h1>
+    <h1 class="sr-only">Manage Information</h1>
 
     <div class="flex flex-col space-y-6">
         <Heading
             variant="small"
-            title="Manage Places"
-            description="Manage the places, edit or delete them"
+            title="Manage Information"
+            description="Manage the places you have submitted, including deleting them."
         />
 
         <div class="w-full max-w-6xl">
