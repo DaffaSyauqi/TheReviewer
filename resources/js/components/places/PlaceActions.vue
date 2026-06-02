@@ -8,6 +8,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
+    DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import {
     AlertDialog,
@@ -31,7 +32,12 @@ import {
     DrawerTitle,
 } from '@/components/ui/drawer';
 import { useMediaQuery } from '@vueuse/core';
-import { MoreHorizontal } from 'lucide-vue-next';
+import {
+    MoreHorizontal,
+    ChevronLeft,
+    ChevronRight,
+    Image,
+} from 'lucide-vue-next';
 
 interface Place {
     id: number;
@@ -46,6 +52,7 @@ interface Place {
     longitude?: number | string;
     status: 'pending' | 'approved' | 'rejected';
     created_at: string;
+    images?: Array<{ id: number; url: string }>;
 }
 
 interface Props {
@@ -59,12 +66,42 @@ const props = defineProps<Props>();
 const openDeleteDialog = ref(false);
 const openDropdown = ref(false);
 const openDetailsDialog = ref(false);
+const openImageDialog = ref(false);
+const currentImageIndex = ref(0);
 const isDesktop = useMediaQuery('(min-width: 768px)');
+
+const images = ref<Array<{ id: number; url: string }>>(
+    props.place?.images || [],
+);
 
 const handleDelete = () => {
     openDeleteDialog.value = false;
     openDropdown.value = false;
     router.delete(`/manage-places/${props.placeId}`);
+};
+
+const nextImage = () => {
+    if (images.value.length > 0) {
+        currentImageIndex.value =
+            (currentImageIndex.value + 1) % images.value.length;
+    }
+};
+
+const prevImage = () => {
+    if (images.value.length > 0) {
+        currentImageIndex.value =
+            (currentImageIndex.value - 1 + images.value.length) %
+            images.value.length;
+    }
+};
+
+const selectImage = (index: number) => {
+    currentImageIndex.value = index;
+};
+
+const openImagePreview = () => {
+    currentImageIndex.value = 0;
+    openImageDialog.value = true;
 };
 </script>
 
@@ -79,6 +116,10 @@ const handleDelete = () => {
             <DropdownMenuItem @click="openDetailsDialog = true">
                 View Details
             </DropdownMenuItem>
+            <DropdownMenuItem @click="openImagePreview">
+                Images
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem @click="openDeleteDialog = true">
                 Delete
             </DropdownMenuItem>
@@ -116,6 +157,74 @@ const handleDelete = () => {
             </DrawerContent>
         </Drawer>
     </template>
+
+    <!-- Image Preview Dialog -->
+    <Dialog v-model:open="openImageDialog">
+        <DialogContent class="max-w-2xl">
+            <DialogHeader>
+                <DialogTitle class="flex items-center gap-2">
+                    <Image class="h-5 w-5" />
+                    Image Preview
+                </DialogTitle>
+            </DialogHeader>
+
+            <div v-if="images.length > 0" class="space-y-4">
+                <div
+                    class="relative flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-black"
+                >
+                    <img
+                        :src="images[currentImageIndex].url"
+                        :alt="`Image ${currentImageIndex + 1}`"
+                        class="h-full w-full object-cover"
+                    />
+                    <button
+                        v-if="images.length > 1"
+                        @click="prevImage"
+                        class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+                    >
+                        <ChevronLeft class="h-5 w-5" />
+                    </button>
+                    <button
+                        v-if="images.length > 1"
+                        @click="nextImage"
+                        class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+                    >
+                        <ChevronRight class="h-5 w-5" />
+                    </button>
+                </div>
+
+                <div
+                    v-if="images.length > 1"
+                    class="flex gap-2 overflow-x-auto pb-2"
+                >
+                    <button
+                        v-for="(image, index) in images"
+                        :key="image.id"
+                        @click="selectImage(index)"
+                        class="h-20 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition-colors"
+                        :class="
+                            currentImageIndex === index
+                                ? 'border-primary'
+                                : 'border-muted'
+                        "
+                    >
+                        <img
+                            :src="image.url"
+                            :alt="`Thumbnail ${index + 1}`"
+                            class="h-full w-full object-cover"
+                        />
+                    </button>
+                </div>
+            </div>
+
+            <div v-else class="py-12 text-center">
+                <div class="mb-4 flex justify-center">
+                    <Image class="h-12 w-12 text-muted-foreground" />
+                </div>
+                <p class="text-muted-foreground">No images uploaded</p>
+            </div>
+        </DialogContent>
+    </Dialog>
 
     <!-- Delete Dialog -->
     <AlertDialog v-model:open="openDeleteDialog">
