@@ -14,7 +14,7 @@ class PlacesController extends Controller
 {
     public function index(): Response
     {
-        $places = Place::where('user_id', auth()->id())->get();
+        $places = Place::where('user_id', auth()->id())->with('category')->get();
 
         return Inertia::render('manage-places/Manage', [
             'places' => $places,

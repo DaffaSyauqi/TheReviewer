@@ -8,8 +8,13 @@ export interface Place {
     id: number;
     name: string;
     description: string;
+    category: string;
     address: string;
     city: string;
+    province?: string;
+    country?: string;
+    latitude?: number | string;
+    longitude?: number | string;
     status: 'pending' | 'approved' | 'rejected';
     created_at: string;
 }
@@ -22,24 +27,36 @@ export const columns: ColumnDef<Place>[] = [
                 Button,
                 {
                     variant: 'ghost',
-                    onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                    onClick: () =>
+                        column.toggleSorting(column.getIsSorted() === 'asc'),
                 },
-                () => [h(ArrowUpDown, { class: 'mr-2 h-4 w-4' }), 'Name']
+                () => [h(ArrowUpDown, { class: 'mr-2 h-4 w-4' }), 'Name'],
             ),
-        cell: ({ row }) => h('div', { class: 'font-medium' }, row.getValue('name')),
+        cell: ({ row }) =>
+            h('div', { class: 'font-medium' }, row.getValue('name')),
     },
     {
-        accessorKey: 'description',
-        header: 'Description',
+        accessorKey: 'category',
+        header: 'Category',
         cell: ({ row }) => {
-            const description = row.getValue('description') as string;
-            return h('div', { class: 'max-w-xs truncate text-sm' }, description);
+            const category = row.getValue('category') as any;
+            const categoryName = category?.name || '-';
+            return h(
+                'div',
+                { class: 'max-w-xs truncate text-sm' },
+                categoryName,
+            );
         },
     },
     {
         accessorKey: 'address',
         header: 'Address',
-        cell: ({ row }) => h('div', { class: 'max-w-xs truncate text-sm' }, row.getValue('address')),
+        cell: ({ row }) =>
+            h(
+                'div',
+                { class: 'max-w-xs truncate text-sm' },
+                row.getValue('address'),
+            ),
     },
     {
         accessorKey: 'city',
@@ -59,8 +76,10 @@ export const columns: ColumnDef<Place>[] = [
 
             return h(
                 'div',
-                { class: `px-2 py-1 rounded text-sm font-medium inline-block ${statusClass}` },
-                status.charAt(0).toUpperCase() + status.slice(1)
+                {
+                    class: `px-2 py-1 rounded text-sm font-medium inline-block ${statusClass}`,
+                },
+                status.charAt(0).toUpperCase() + status.slice(1),
             );
         },
     },
@@ -71,6 +90,7 @@ export const columns: ColumnDef<Place>[] = [
             h(PlaceActions, {
                 placeId: row.original.id,
                 placeName: row.original.name,
+                place: row.original,
             }),
     },
 ];

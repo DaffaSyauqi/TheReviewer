@@ -9,8 +9,13 @@ type Props = {
         id: number;
         name: string;
         description: string;
+        category: { name: string };
         address: string;
         city: string;
+        province?: string;
+        country?: string;
+        latitude?: number | string;
+        longitude?: number | string;
         status: 'pending' | 'approved' | 'rejected';
         created_at: string;
     }>;
