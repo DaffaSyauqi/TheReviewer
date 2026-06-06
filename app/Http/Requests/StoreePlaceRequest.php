@@ -21,6 +21,8 @@ class StoreePlaceRequest extends FormRequest
             'city' => ['required', 'string', 'max:100'],
             'province' => ['nullable', 'string', 'max:100'],
             'country' => ['nullable', 'string', 'max:100'],
+            'images' => ['nullable', 'array', 'max:3'],
+            'images.*' => ['image', 'mimes:jpeg,png,webp', 'max:5120'],
         ];
     }
 
@@ -33,6 +35,10 @@ class StoreePlaceRequest extends FormRequest
             'description.required' => 'Description is required.',
             'adress.required' => 'Address is required.',
             'city.required' => 'City is required.',
+            'images.max' => 'You can upload a maximum of 3 images.',
+            'images.*.image' => 'Each file must be a valid image.',
+            'images.*.mimes' => 'Only JPEG, PNG, and WebP images are allowed.',
+            'images.*.max' => 'Each image must not exceed 5MB.',
         ];
     }
 }
