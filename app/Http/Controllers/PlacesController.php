@@ -6,6 +6,7 @@ use App\Http\Requests\StoreePlaceRequest;
 use App\Models\Category;
 use App\Models\Place;
 use App\Services\GeocodingService;
+use App\Services\ImageUploadService;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,7 +15,7 @@ class PlacesController extends Controller
 {
     public function index(): Response
     {
-        $places = Place::where('user_id', auth()->id())->with('category')->get();
+        $places = Place::where('user_id', auth()->id())->with('category', 'images')->get();
 
         return Inertia::render('manage-places/Manage', [
             'places' => $places,
@@ -30,7 +31,7 @@ class PlacesController extends Controller
         ]);
     }
 
-    public function store(StoreePlaceRequest $request, GeocodingService $geocodingService)
+    public function store(StoreePlaceRequest $request, GeocodingService $geocodingService, ImageUploadService $imageUploadService)
     {
         $validated = $request->validated();
 
@@ -46,7 +47,7 @@ class PlacesController extends Controller
             'user_id' => $request->user()->id,
             'category_id' => $category->id,
             'name' => $validated['placeName'],
-            'slug' => Str::slug($validated['placeName']) . '-' . Str::random(6),
+            'slug' => Str::slug($validated['placeName']).'-'.Str::random(6),
             'description' => $validated['description'],
             'address' => $validated['adress'],
             'city' => $validated['city'],
@@ -57,7 +58,17 @@ class PlacesController extends Controller
             'status' => 'pending',
         ]);
 
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $imageData = $imageUploadService->upload($image, $place->id);
+                $place->images()->create($imageData);
+            }
+        }
+
+        $place->load('images');
+
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Place added successfully. Awaiting admin approval.')]);
+
         return back();
     }
 
@@ -87,7 +98,7 @@ class PlacesController extends Controller
         $place->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Place deleted successfully.')]);
+
         return back();
     }
 }
-

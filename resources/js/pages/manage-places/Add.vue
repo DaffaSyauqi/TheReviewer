@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
+import { Head, Link, usePage, useForm } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
 import * as LucideIcons from 'lucide-vue-next';
@@ -48,7 +48,18 @@ defineOptions({
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
-const selectedCategory = ref<string>('');
+
+const form = useForm({
+    placeName: '',
+    category: '',
+    description: '',
+    adress: '',
+    city: '',
+    province: '',
+    country: '',
+    images: [] as File[],
+});
+
 const isUploadDialogOpen = ref(false);
 const uploadedImages = ref<
     Array<{ file: File; preview: string; name: string; size: string }>
@@ -56,7 +67,6 @@ const uploadedImages = ref<
 
 watch(isUploadDialogOpen, (isOpen) => {
     if (!isOpen) {
-        uploadedImages.value = [];
     }
 });
 
@@ -125,6 +135,19 @@ const processFiles = (files: FileList) => {
 const removeImage = (index: number) => {
     uploadedImages.value.splice(index, 1);
 };
+
+const syncImagesToForm = () => {
+    form.images = uploadedImages.value.map((img) => img.file);
+};
+
+const handleSubmit = () => {
+    syncImagesToForm();
+    form.post('/manage-places', {
+        onSuccess: () => {
+            uploadedImages.value = [];
+        },
+    });
+};
 </script>
 
 <template>
@@ -139,29 +162,21 @@ const removeImage = (index: number) => {
             description="Enter the details of the place you want to add"
         />
 
-        <Form
-            class="space-y-6"
-            v-slot="{ errors, processing }"
-            method="post"
-            action="/manage-places"
-            resetOnSuccess
-            @success="selectedCategory = ''"
-        >
+        <form @submit.prevent="handleSubmit" class="space-y-6">
             <div class="grid gap-2">
                 <Label for="placeName">Place Name</Label>
                 <Input
                     id="placeName"
                     class="mt-1 block w-full"
-                    name="placeName"
-                    required
+                    v-model="form.placeName"
                     placeholder="Place name"
                 />
-                <InputError class="mt-2" :message="errors.placeName" />
+                <InputError class="mt-2" :message="form.errors.placeName" />
             </div>
 
             <div class="grid gap-2">
                 <Label for="category">Category</Label>
-                <Select v-model="selectedCategory">
+                <Select v-model="form.category">
                     <SelectTrigger class="mt-1 w-full">
                         <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
@@ -182,12 +197,7 @@ const removeImage = (index: number) => {
                         </SelectItem>
                     </SelectContent>
                 </Select>
-                <input
-                    type="hidden"
-                    name="category"
-                    :value="selectedCategory"
-                />
-                <InputError class="mt-2" :message="errors.category" />
+                <InputError class="mt-2" :message="form.errors.category" />
             </div>
 
             <div class="grid gap-2">
@@ -195,11 +205,10 @@ const removeImage = (index: number) => {
                 <Textarea
                     id="description"
                     class="mt-1 block w-full"
-                    name="description"
-                    required
+                    v-model="form.description"
                     placeholder="Description"
                 />
-                <InputError class="mt-2" :message="errors.description" />
+                <InputError class="mt-2" :message="form.errors.description" />
             </div>
 
             <div class="grid gap-2">
@@ -207,11 +216,10 @@ const removeImage = (index: number) => {
                 <Input
                     id="adress"
                     class="mt-1 block w-full"
-                    name="adress"
-                    required
+                    v-model="form.adress"
                     placeholder="Full address"
                 />
-                <InputError class="mt-2" :message="errors.adress" />
+                <InputError class="mt-2" :message="form.errors.adress" />
             </div>
 
             <div class="grid gap-2">
@@ -219,11 +227,10 @@ const removeImage = (index: number) => {
                 <Input
                     id="city"
                     class="mt-1 block w-full"
-                    name="city"
-                    required
+                    v-model="form.city"
                     placeholder="City"
                 />
-                <InputError class="mt-2" :message="errors.city" />
+                <InputError class="mt-2" :message="form.errors.city" />
             </div>
 
             <div class="grid gap-2">
@@ -236,10 +243,10 @@ const removeImage = (index: number) => {
                 <Input
                     id="province"
                     class="mt-1 block w-full"
-                    name="province"
+                    v-model="form.province"
                     placeholder="Province"
                 />
-                <InputError class="mt-2" :message="errors.province" />
+                <InputError class="mt-2" :message="form.errors.province" />
             </div>
 
             <div class="grid gap-2">
@@ -251,10 +258,10 @@ const removeImage = (index: number) => {
                 <Input
                     id="country"
                     class="mt-1 block w-full"
-                    name="country"
+                    v-model="form.country"
                     placeholder="Country"
                 />
-                <InputError class="mt-2" :message="errors.country" />
+                <InputError class="mt-2" :message="form.errors.country" />
             </div>
 
             <div class="grid gap-2">
@@ -275,11 +282,11 @@ const removeImage = (index: number) => {
             </div>
 
             <div class="flex items-center gap-4">
-                <Button :disabled="processing" type="submit">
-                    {{ processing ? 'Creating...' : 'Add Place' }}
+                <Button :disabled="form.processing" type="submit">
+                    {{ form.processing ? 'Creating...' : 'Add Place' }}
                 </Button>
             </div>
-        </Form>
+        </form>
 
         <Dialog v-model:open="isUploadDialogOpen">
             <DialogContent class="max-w-2xl">
@@ -388,10 +395,9 @@ const removeImage = (index: number) => {
                     <Button
                         type="button"
                         class="w-full"
-                        :disabled="uploadedImages.length === 0"
+                        @click="isUploadDialogOpen = false"
                     >
-                        <LucideIcons.Upload class="mr-2 h-4 w-4" />
-                        Upload Images
+                        Close
                     </Button>
                 </div>
             </DialogContent>

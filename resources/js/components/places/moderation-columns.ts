@@ -8,7 +8,7 @@ export interface ModerationPlace {
     id: number;
     name: string;
     description: string;
-    category: { name: string };
+    category: string;
     address: string;
     city: string;
     province?: string;
@@ -17,6 +17,7 @@ export interface ModerationPlace {
     longitude?: number | string;
     status: 'pending' | 'approved' | 'rejected';
     created_at: string;
+    images?: Array<{ id: number; url: string }>;
 }
 
 export const columns: ColumnDef<ModerationPlace>[] = [

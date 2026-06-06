@@ -14,6 +14,7 @@ class ModerationController extends Controller
         $places = Place::where('status', 'pending')
             ->with('user')
             ->with('category')
+            ->with('images')
             ->orderBy('created_at', 'desc')
             ->get();
 
