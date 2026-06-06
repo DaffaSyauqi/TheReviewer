@@ -43,7 +43,7 @@ class ImageUploadService
         $timestamp = now()->timestamp;
         $randomString = Str::random(8);
         $filename = "{$timestamp}-{$randomString}.webp";
-        $path = "place-images/{$placeId}/{$filename}";
+        $path = "{$placeId}/{$filename}";
 
         Storage::disk(self::STORAGE_DISK)->put($path, $imageData);
 

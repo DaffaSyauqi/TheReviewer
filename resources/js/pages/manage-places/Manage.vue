@@ -19,6 +19,7 @@ type Props = {
         longitude?: number | string;
         status: 'pending' | 'approved' | 'rejected';
         created_at: string;
+        images?: Array<{ id: number; url: string }>;
     }>;
 };
 

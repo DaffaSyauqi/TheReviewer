@@ -67,8 +67,6 @@ const uploadedImages = ref<
 
 watch(isUploadDialogOpen, (isOpen) => {
     if (!isOpen) {
-        // Don't reset images when closing dialog
-        // They will reset after successful form submission
     }
 });
 
@@ -139,7 +137,7 @@ const removeImage = (index: number) => {
 };
 
 const syncImagesToForm = () => {
-    form.images = uploadedImages.value.map(img => img.file);
+    form.images = uploadedImages.value.map((img) => img.file);
 };
 
 const handleSubmit = () => {

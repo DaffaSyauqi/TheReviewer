@@ -17,6 +17,7 @@ export interface Place {
     longitude?: number | string;
     status: 'pending' | 'approved' | 'rejected';
     created_at: string;
+    images?: Array<{ id: number; url: string }>;
 }
 
 export const columns: ColumnDef<Place>[] = [
