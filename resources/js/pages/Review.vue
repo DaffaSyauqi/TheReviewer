@@ -1,23 +1,37 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { Head } from '@inertiajs/vue3';
+import * as LucideIcons from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import {
-    X,
-    Search,
-    Filter,
-    Camera,
-    UtensilsCrossed,
-    Bed,
-    ChevronRight,
-    MapPinned,
-    Star,
-} from 'lucide-vue-next';
 import NavBar from '@/components/NavBar.vue';
 import { Map } from '@/components/map';
 import { MapIndonesia } from '@/components/map';
+
+interface Place {
+    id: number;
+    name: string;
+    category: string;
+    categorySlug: string;
+    address: string;
+    city: string;
+    province: string;
+    latitude: number;
+    longitude: number;
+}
+
+interface Category {
+    id: string;
+    label: string;
+    icon: string | null;
+    count: number;
+}
+
+const props = defineProps<{
+    places: Place[];
+    categories: Category[];
+}>();
 
 const isLoadingData = ref(false);
 const loadError = ref<string | null>(null);
@@ -29,81 +43,17 @@ const selectedRegion = ref<{
 } | null>(null);
 
 const search = ref('');
-
-const categories = [
-    { id: 'all', label: 'Semua', count: 24 },
-    { id: 'wisata', label: 'Wisata', count: 8 },
-    { id: 'kuliner', label: 'Kuliner', count: 7 },
-    { id: 'hotel', label: 'Penginapan', count: 5 },
-    { id: 'shopping', label: 'Belanja', count: 4 },
-];
-
 const activeCategory = ref('all');
 
-const places = ref([
-    {
-        id: 1,
-        name: 'Gedung Sate',
-        category: 'Wisata',
-        address: 'Jl. Diponegoro No.22, Bandung Wetan',
-        rating: 4.6,
-        reviews: '1.2k',
-        icon: Camera,
-        color: 'text-emerald-500',
-    },
-    {
-        id: 2,
-        name: 'Kawah Putih',
-        category: 'Wisata',
-        address: 'Jl. Raya Ciwidey, Rancabali',
-        rating: 4.7,
-        reviews: '980',
-        icon: Camera,
-        color: 'text-emerald-500',
-    },
-    {
-        id: 3,
-        name: 'Bakso Rudal',
-        category: 'Kuliner',
-        address: 'Jl. Gerlong Hilir No.27, Sukajadi',
-        rating: 4.5,
-        reviews: '860',
-        icon: UtensilsCrossed,
-        color: 'text-amber-500',
-    },
-    {
-        id: 4,
-        name: 'Kopi Anjis',
-        category: 'Kuliner',
-        address: 'Jl. Braga No.15, Sumur Bandung',
-        rating: 4.4,
-        reviews: '560',
-        icon: UtensilsCrossed,
-        color: 'text-amber-500',
-    },
-    {
-        id: 5,
-        name: 'The Trans Luxury Hotel',
-        category: 'Penginapan',
-        address: 'Jl. Gatot Subroto No.289',
-        rating: 4.8,
-        reviews: '1.1k',
-        icon: Bed,
-        color: 'text-blue-500',
-    },
-    {
-        id: 5,
-        name: 'The Trans Luxury Hotel',
-        category: 'Penginapan',
-        address: 'Jl. Gatot Subroto No.289',
-        rating: 4.8,
-        reviews: '1.1k',
-        icon: Bed,
-        color: 'text-blue-500',
-    },
-]);
+const places = ref(props.places);
+const categories = ref(props.categories);
 
-function onRegionClick(payload: typeof selectedRegion.value) {
+const getIcon = (iconName: string | null) => {
+    if (!iconName) return null;
+    return (LucideIcons as Record<string, any>)[iconName] || null;
+};
+
+ function onRegionClick(payload: typeof selectedRegion.value) {
     loadError.value = null;
     selectedRegion.value = payload;
     console.table(selectedRegion.value);
@@ -121,15 +71,14 @@ const filteredPlaces = computed(() => {
 
         const matchCategory =
             activeCategory.value === 'all' ||
-            place.category.toLowerCase() === activeCategory.value;
+            place.categorySlug === activeCategory.value;
 
         return matchSearch && matchCategory;
     });
 });
 
-function openPlace(place: any) {
+function openPlace(place: Place) {
     console.log(place);
-    // nanti buka dialog detail
 }
 </script>
 
@@ -233,7 +182,7 @@ function openPlace(place: any) {
                         </p>
                     </div>
                     <Button variant="ghost" size="icon" @click="closeSidebar">
-                        <X />
+                        <LucideIcons.X />
                     </Button>
                 </div>
 
@@ -241,7 +190,7 @@ function openPlace(place: any) {
                     <!-- Search -->
                     <div class="flex shrink-0 gap-2">
                         <div class="relative flex-1">
-                            <Search
+                            <LucideIcons.Search
                                 class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                             />
 
@@ -269,6 +218,11 @@ function openPlace(place: any) {
                                 "
                                 @click="activeCategory = category.id"
                             >
+                                <component
+                                    :is="getIcon(category.icon)"
+                                    v-if="getIcon(category.icon)"
+                                    class="mr-1 h-4 w-4"
+                                />
                                 {{ category.label }}
                                 <span class="ml-1 opacity-70">
                                     {{ category.count }}
@@ -305,7 +259,7 @@ function openPlace(place: any) {
                                             <div
                                                 class="mt-2 flex items-start gap-1 text-xs text-muted-foreground"
                                             >
-                                                <MapPinned
+                                                <LucideIcons.MapPinned
                                                     class="mt-0.5 h-3 w-3 shrink-0"
                                                 />
                                                 <span class="line-clamp-1">
@@ -314,7 +268,7 @@ function openPlace(place: any) {
                                             </div>
                                         </div>
 
-                                        <ChevronRight
+                                        <LucideIcons.ChevronRight
                                             class="mt-1 h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1"
                                         />
                                     </div>
