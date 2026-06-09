@@ -1,3 +1,94 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { Head } from '@inertiajs/vue3';
+import * as LucideIcons from 'lucide-vue-next';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import NavBar from '@/components/NavBar.vue';
+import { Map } from '@/components/map';
+import { MapIndonesia } from '@/components/map';
+import PlaceDetailDialog from '@/components/PlaceDetailDialog.vue';
+
+interface Place {
+    id: number;
+    name: string;
+    description: string;
+    category: string;
+    categorySlug: string;
+    address: string;
+    city: string;
+    province: string;
+    country: string;
+    latitude: number;
+    longitude: number;
+}
+
+interface Category {
+    id: string;
+    label: string;
+    icon: string | null;
+    count: number;
+}
+
+const props = defineProps<{
+    places: Place[];
+    categories: Category[];
+}>();
+
+const isLoadingData = ref(false);
+const loadError = ref<string | null>(null);
+const selectedRegion = ref<{
+    province: string;
+    city: string;
+    type: string;
+    properties: Record<string, unknown>;
+} | null>(null);
+
+const search = ref('');
+const activeCategory = ref('all');
+
+const places = ref(props.places);
+const categories = ref(props.categories);
+
+const selectedPlace = ref<Place | null>(null);
+const placeDialogOpen = ref(false);
+
+const getIcon = (iconName: string | null) => {
+    if (!iconName) return null;
+    return (LucideIcons as Record<string, any>)[iconName] || null;
+};
+
+function onRegionClick(payload: typeof selectedRegion.value) {
+    loadError.value = null;
+    selectedRegion.value = payload;
+    console.table(selectedRegion.value);
+}
+
+function closeSidebar() {
+    selectedRegion.value = null;
+}
+
+const filteredPlaces = computed(() => {
+    return places.value.filter((place) => {
+        const matchSearch =
+            place.name.toLowerCase().includes(search.value.toLowerCase()) ||
+            place.address.toLowerCase().includes(search.value.toLowerCase());
+
+        const matchCategory =
+            activeCategory.value === 'all' ||
+            place.categorySlug === activeCategory.value;
+
+        return matchSearch && matchCategory;
+    });
+});
+
+function openPlace(place: Place) {
+    selectedPlace.value = place;
+    placeDialogOpen.value = true;
+}
+</script>
+
 <template>
     <Head title="Review" />
 
@@ -64,7 +155,7 @@
         <Transition name="slide-left">
             <aside
                 v-if="selectedRegion"
-                class="absolute top-0 left-0 z-20 flex h-full w-80 flex-col border-l bg-background shadow-xl"
+                class="absolute top-0 left-0 z-20 flex h-full w-full flex-col border-l bg-background shadow-xl md:w-96"
             >
                 <div
                     class="flex shrink-0 items-start justify-between gap-3 border-b px-5 py-4"
@@ -98,58 +189,110 @@
                         </p>
                     </div>
                     <Button variant="ghost" size="icon" @click="closeSidebar">
-                        <X />
+                        <LucideIcons.X />
                     </Button>
                 </div>
 
-                <div class="flex-1 overflow-y-auto px-5 py-4">
-                    <div
-                        class="flex h-36 items-center justify-center rounded-lg border border-dashed border-white"
-                    >
-                        <p class="text-center text-sm text-muted-foreground">
-                            Konten sidebar
-                        </p>
-                    </div>
-                </div>
+                <div class="flex min-h-0 flex-1 flex-col px-4 py-4">
+                    <!-- Search -->
+                    <div class="flex shrink-0 gap-2">
+                        <div class="relative flex-1">
+                            <LucideIcons.Search
+                                class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                            />
 
-                <div class="shrink-0 border-t px-5 py-3">
-                    <p class="text-center text-xs text-muted-foreground">
-                        Klik wilayah lain untuk berpindah
-                    </p>
+                            <Input
+                                v-model="search"
+                                placeholder="Search places..."
+                                class="pl-9"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <ScrollArea class="pb-2">
+                        <div
+                            class="mt-4 flex shrink-0 gap-2 overflow-x-auto pb-2"
+                        >
+                            <Button
+                                v-for="category in categories"
+                                :key="category.id"
+                                size="sm"
+                                :variant="
+                                    activeCategory === category.id
+                                        ? 'default'
+                                        : 'outline'
+                                "
+                                @click="activeCategory = category.id"
+                            >
+                                <component
+                                    :is="getIcon(category.icon)"
+                                    v-if="getIcon(category.icon)"
+                                    class="mr-1 h-4 w-4"
+                                />
+                                {{ category.label }}
+                                <span class="ml-1 opacity-70">
+                                    {{ category.count }}
+                                </span>
+                            </Button>
+                        </div>
+                        <ScrollBar orientation="horizontal" />
+                    </ScrollArea>
+
+                    <!-- Places -->
+                    <div class="mt-4 min-h-0 flex-1">
+                        <ScrollArea class="h-full">
+                            <div class="space-y-3 pr-4">
+                                <button
+                                    v-for="place in filteredPlaces"
+                                    :key="place.id"
+                                    @click="openPlace(place)"
+                                    class="group w-full rounded-xl border bg-card p-4 text-left transition-all hover:border-primary/40 hover:bg-accent"
+                                >
+                                    <div class="flex items-start gap-3">
+                                        <div class="min-w-0 flex-1">
+                                            <h3
+                                                class="truncate text-sm font-semibold text-foreground"
+                                            >
+                                                {{ place.name }}
+                                            </h3>
+
+                                            <p
+                                                class="mt-1 text-xs font-medium text-primary"
+                                            >
+                                                {{ place.category }}
+                                            </p>
+
+                                            <div
+                                                class="mt-2 flex items-start gap-1 text-xs text-muted-foreground"
+                                            >
+                                                <LucideIcons.MapPinned
+                                                    class="mt-0.5 h-3 w-3 shrink-0"
+                                                />
+                                                <span class="line-clamp-1">
+                                                    {{ place.address }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <LucideIcons.ChevronRight
+                                            class="mt-1 h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1"
+                                        />
+                                    </div>
+                                </button>
+                            </div>
+                        </ScrollArea>
+                    </div>
                 </div>
             </aside>
         </Transition>
+
+        <PlaceDetailDialog
+            v-model:open="placeDialogOpen"
+            :place="selectedPlace"
+        />
     </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { Head } from '@inertiajs/vue3';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-vue-next';
-import NavBar from '@/components/NavBar.vue';
-import { Map } from '@/components/map';
-import { MapIndonesia } from '@/components/map';
-
-const isLoadingData = ref(false);
-const loadError = ref<string | null>(null);
-const selectedRegion = ref<{
-    province: string;
-    city: string;
-    type: string;
-    properties: Record<string, unknown>;
-} | null>(null);
-
-function onRegionClick(payload: typeof selectedRegion.value) {
-    loadError.value = null;
-    selectedRegion.value = payload;
-    console.table(selectedRegion.value);
-}
-
-function closeSidebar() {
-    selectedRegion.value = null;
-}
-</script>
 
 <style scoped>
 .slide-left-enter-active,

@@ -1,0 +1,267 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+export interface PlaceImage {
+    id: number;
+    image_url: string;
+}
+
+export interface Place {
+    id: number;
+    name: string;
+    description: string;
+    category: string;
+    categorySlug: string;
+    address: string;
+    city: string;
+    province: string;
+    country: string;
+    latitude: number;
+    longitude: number;
+    // mapsUrl: string;
+    images?: Array<{ id: number; url: string }>;
+}
+
+import {
+    MapPin,
+    Building2,
+    Map,
+    Globe,
+    Link as LinkIcon,
+    Star,
+    ChevronLeft,
+    ChevronRight,
+} from 'lucide-vue-next';
+
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+
+import { Separator } from '@/components/ui/separator';
+
+interface Props {
+    open: boolean;
+    place: Place | null;
+}
+
+const props = defineProps<Props>();
+
+const emit = defineEmits<{
+    'update:open': [value: boolean];
+}>();
+
+const currentImageIndex = ref(0);
+
+const images = ref<Array<{ id: number; url: string }>>(
+    props.place?.images || [],
+);
+
+const nextImage = () => {
+    if (images.value.length > 0) {
+        currentImageIndex.value =
+            (currentImageIndex.value + 1) % images.value.length;
+    }
+};
+
+const prevImage = () => {
+    if (images.value.length > 0) {
+        currentImageIndex.value =
+            (currentImageIndex.value - 1 + images.value.length) %
+            images.value.length;
+    }
+};
+
+const selectImage = (index: number) => {
+    currentImageIndex.value = index;
+};
+
+const formatValue = (value: any) => value || '-';
+</script>
+
+<template>
+    <Dialog :open="open" @update:open="emit('update:open', $event)">
+        <DialogContent
+            class="max-h-[98vh] max-w-[98vw] overflow-hidden p-0 sm:max-w-6xl"
+        >
+            <template v-if="place">
+                <DialogHeader class="px-6 pt-6">
+                    <DialogTitle> Detail Tempat </DialogTitle>
+                </DialogHeader>
+
+                <div class="px-6 pb-6">
+                    <!-- Carousel -->
+
+                    <div v-if="images.length > 0" class="space-y-4">
+                        <div
+                            class="relative h-72 overflow-hidden rounded-lg bg-black"
+                        >
+                            <img
+                                :src="images[currentImageIndex].url"
+                                :alt="`Image ${currentImageIndex + 1}`"
+                                class="h-full w-full object-cover"
+                            />
+                            <button
+                                v-if="images.length > 1"
+                                @click="prevImage"
+                                class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+                            >
+                                <ChevronLeft class="h-5 w-5" />
+                            </button>
+                            <button
+                                v-if="images.length > 1"
+                                @click="nextImage"
+                                class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+                            >
+                                <ChevronRight class="h-5 w-5" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <div v-else class="py-12 text-center">
+                        <div class="mb-4 flex justify-center">
+                            <Image class="h-12 w-12 text-muted-foreground" />
+                        </div>
+                        <p class="text-muted-foreground">No images uploaded</p>
+                    </div>
+
+                    <Separator />
+
+                    <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_auto_1fr]">
+                        <!-- Left -->
+
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-2">
+                                <h2
+                                    class="inline-flex items-center text-xl leading-tight font-semibold text-foreground"
+                                >
+                                    {{ formatValue(place.name) }}
+                                </h2>
+
+                                <span
+                                    class="inline-flex items-center rounded-full border border-border px-2.5 py-0.5 text-sm font-medium text-primary"
+                                >
+                                    {{ formatValue(place.category) }}
+                                </span>
+                            </div>
+
+                            <Separator />
+
+                            <div>
+                                <h3 class="text-md mb-2 font-semibold">
+                                    Deskripsi
+                                </h3>
+
+                                <p
+                                    class="text-sm leading-6 text-muted-foreground"
+                                >
+                                    {{ formatValue(place.description) }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <Separator orientation="vertical" />
+
+                        <!-- Right -->
+
+                        <div class="space-y-4">
+                            <div class="flex gap-3">
+                                <MapPin
+                                    class="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                                />
+
+                                <div>
+                                    <p class="text-xs text-muted-foreground">
+                                        Alamat
+                                    </p>
+
+                                    <p class="text-sm font-medium">
+                                        {{ formatValue(place.address) }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <Separator />
+
+                            <div class="flex gap-3">
+                                <Building2
+                                    class="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                                />
+
+                                <div>
+                                    <p class="text-xs text-muted-foreground">
+                                        Kota
+                                    </p>
+
+                                    <p class="text-sm font-medium">
+                                        {{ formatValue(place.city) }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <Separator />
+
+                            <div class="flex gap-3">
+                                <Map
+                                    class="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                                />
+
+                                <div>
+                                    <p class="text-xs text-muted-foreground">
+                                        Provinsi
+                                    </p>
+
+                                    <p class="text-sm font-medium">
+                                        {{ formatValue(place.province) }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <Separator />
+
+                            <div class="flex gap-3">
+                                <Globe
+                                    class="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                                />
+
+                                <div>
+                                    <p class="text-xs text-muted-foreground">
+                                        Negara
+                                    </p>
+
+                                    <p class="text-sm font-medium">
+                                        {{ formatValue(place.country) }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <Separator />
+
+                            <div class="flex gap-3">
+                                <LinkIcon
+                                    class="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                                />
+
+                                <div>
+                                    <p class="text-xs text-muted-foreground">
+                                        Link Maps
+                                    </p>
+
+                                    <!-- <a
+                                        :href="place.maps_url"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="text-sm font-medium text-primary hover:underline"
+                                    >
+                                        Buka di Google Maps
+                                    </a> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </DialogContent>
+    </Dialog>
+</template>
