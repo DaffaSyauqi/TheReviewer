@@ -9,24 +9,10 @@ import {
     LayoutGrid,
 } from 'lucide-vue-next';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
-interface Place {
-    id: number;
-    name: string;
-    description: string;
-    category: { name: string };
-    address: string;
-    city: string;
-    province?: string;
-    country?: string;
-    latitude?: number | string;
-    longitude?: number | string;
-    status: 'pending' | 'approved' | 'rejected';
-    created_at: string;
-}
+import type { ManagePlace } from '@/types';
 
 interface Props {
-    place?: Place;
+    place?: ManagePlace;
     placeId: number;
     placeName: string;
 }

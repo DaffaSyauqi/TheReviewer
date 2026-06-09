@@ -3,24 +3,9 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { ArrowUpDown } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import ModerationActions from './ModerationActions.vue';
+import type { ManagePlace } from '@/types';
 
-export interface ModerationPlace {
-    id: number;
-    name: string;
-    description: string;
-    category: string;
-    address: string;
-    city: string;
-    province?: string;
-    country?: string;
-    latitude?: number | string;
-    longitude?: number | string;
-    status: 'pending' | 'approved' | 'rejected';
-    created_at: string;
-    images?: Array<{ id: number; url: string }>;
-}
-
-export const columns: ColumnDef<ModerationPlace>[] = [
+export const columns: ColumnDef<ManagePlace>[] = [
     {
         accessorKey: 'name',
         header: ({ column }) =>

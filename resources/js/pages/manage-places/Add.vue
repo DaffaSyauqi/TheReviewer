@@ -23,15 +23,12 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 
+import type { CategoryInfo } from '@/types';
+
 type Props = {
     mustVerifyEmail: boolean;
     status?: string;
-    categories: Array<{
-        id: number;
-        name: string;
-        slug: string;
-        icon: string | null;
-    }>;
+    categories: CategoryInfo[];
 };
 
 defineProps<Props>();
