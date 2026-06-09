@@ -1,25 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-export interface PlaceImage {
-    id: number;
-    image_url: string;
-}
-
-export interface Place {
-    id: number;
-    name: string;
-    description: string;
-    category: string;
-    categorySlug: string;
-    address: string;
-    city: string;
-    province: string;
-    country: string;
-    latitude: number;
-    longitude: number;
-    // mapsUrl: string;
-    images?: Array<{ id: number; url: string }>;
-}
+import { ref } from 'vue';
+import type { ReviewPlace, PlaceImage } from '@/types';
 
 import {
     MapPin,
@@ -43,7 +24,7 @@ import { Separator } from '@/components/ui/separator';
 
 interface Props {
     open: boolean;
-    place: Place | null;
+    place: ReviewPlace | null;
 }
 
 const props = defineProps<Props>();
@@ -54,9 +35,7 @@ const emit = defineEmits<{
 
 const currentImageIndex = ref(0);
 
-const images = ref<Array<{ id: number; url: string }>>(
-    props.place?.images || [],
-);
+const images = ref<PlaceImage[]>(props.place?.images || []);
 
 const nextImage = () => {
     if (images.value.length > 0) {

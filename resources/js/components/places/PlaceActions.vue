@@ -38,27 +38,12 @@ import {
     ChevronRight,
     Image,
 } from 'lucide-vue-next';
-
-interface Place {
-    id: number;
-    name: string;
-    description: string;
-    category: { name: string };
-    address: string;
-    city: string;
-    province?: string;
-    country?: string;
-    latitude?: number | string;
-    longitude?: number | string;
-    status: 'pending' | 'approved' | 'rejected';
-    created_at: string;
-    images?: Array<{ id: number; url: string }>;
-}
+import type { ManagePlace, PlaceImage } from '@/types';
 
 interface Props {
     placeId: number;
     placeName: string;
-    place?: Place;
+    place?: ManagePlace;
 }
 
 const props = defineProps<Props>();
@@ -70,9 +55,7 @@ const openImageDialog = ref(false);
 const currentImageIndex = ref(0);
 const isDesktop = useMediaQuery('(min-width: 768px)');
 
-const images = ref<Array<{ id: number; url: string }>>(
-    props.place?.images || [],
-);
+const images = ref<PlaceImage[]>(props.place?.images || []);
 
 const handleDelete = () => {
     openDeleteDialog.value = false;

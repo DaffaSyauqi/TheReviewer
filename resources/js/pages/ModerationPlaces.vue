@@ -3,26 +3,11 @@ import { Head, usePage } from '@inertiajs/vue3';
 import Heading from '@/components/Heading.vue';
 import DataTable from '@/components/places/DataTable.vue';
 import { columns } from '@/components/places/moderation-columns';
+import type { ManagePlace } from '@/types';
 
-type Props = {
-    places: Array<{
-        id: number;
-        name: string;
-        description: string;
-        category: { name: string };
-        address: string;
-        city: string;
-        province?: string;
-        country?: string;
-        latitude?: number | string;
-        longitude?: number | string;
-        status: 'pending' | 'approved' | 'rejected';
-        created_at: string;
-        images?: Array<{ id: number; url: string }>;
-    }>;
-};
-
-defineProps<Props>();
+defineProps<{
+    places: ManagePlace[];
+}>();
 
 defineOptions({
     layout: {

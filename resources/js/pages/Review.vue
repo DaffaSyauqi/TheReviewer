@@ -9,31 +9,11 @@ import NavBar from '@/components/NavBar.vue';
 import { Map } from '@/components/map';
 import { MapIndonesia } from '@/components/map';
 import PlaceDetailDialog from '@/components/PlaceDetailDialog.vue';
-
-interface Place {
-    id: number;
-    name: string;
-    description: string;
-    category: string;
-    categorySlug: string;
-    address: string;
-    city: string;
-    province: string;
-    country: string;
-    latitude: number;
-    longitude: number;
-}
-
-interface Category {
-    id: string;
-    label: string;
-    icon: string | null;
-    count: number;
-}
+import type { ReviewPlace, ReviewCategory } from '@/types';
 
 const props = defineProps<{
-    places: Place[];
-    categories: Category[];
+    places: ReviewPlace[];
+    categories: ReviewCategory[];
 }>();
 
 const isLoadingData = ref(false);
@@ -51,7 +31,7 @@ const activeCategory = ref('all');
 const places = ref(props.places);
 const categories = ref(props.categories);
 
-const selectedPlace = ref<Place | null>(null);
+const selectedPlace = ref<ReviewPlace | null>(null);
 const placeDialogOpen = ref(false);
 
 const getIcon = (iconName: string | null) => {
@@ -83,7 +63,7 @@ const filteredPlaces = computed(() => {
     });
 });
 
-function openPlace(place: Place) {
+function openPlace(place: ReviewPlace) {
     selectedPlace.value = place;
     placeDialogOpen.value = true;
 }
