@@ -17,11 +17,13 @@ class ReviewController extends Controller
             ->map(fn (Place $place): array => [
                 'id' => $place->id,
                 'name' => $place->name,
+                'description' => $place->description,
                 'category' => $place->category->name,
                 'categorySlug' => $place->category->slug,
                 'address' => $place->address,
                 'city' => $place->city,
                 'province' => $place->province,
+                'country' => $place->country,
                 'latitude' => $place->latitude,
                 'longitude' => $place->longitude,
             ]);

@@ -8,15 +8,18 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import NavBar from '@/components/NavBar.vue';
 import { Map } from '@/components/map';
 import { MapIndonesia } from '@/components/map';
+import PlaceDetailDialog from '@/components/PlaceDetailDialog.vue';
 
 interface Place {
     id: number;
     name: string;
+    description: string;
     category: string;
     categorySlug: string;
     address: string;
     city: string;
     province: string;
+    country: string;
     latitude: number;
     longitude: number;
 }
@@ -48,12 +51,15 @@ const activeCategory = ref('all');
 const places = ref(props.places);
 const categories = ref(props.categories);
 
+const selectedPlace = ref<Place | null>(null);
+const placeDialogOpen = ref(false);
+
 const getIcon = (iconName: string | null) => {
     if (!iconName) return null;
     return (LucideIcons as Record<string, any>)[iconName] || null;
 };
 
- function onRegionClick(payload: typeof selectedRegion.value) {
+function onRegionClick(payload: typeof selectedRegion.value) {
     loadError.value = null;
     selectedRegion.value = payload;
     console.table(selectedRegion.value);
@@ -78,7 +84,8 @@ const filteredPlaces = computed(() => {
 });
 
 function openPlace(place: Place) {
-    console.log(place);
+    selectedPlace.value = place;
+    placeDialogOpen.value = true;
 }
 </script>
 
@@ -279,6 +286,11 @@ function openPlace(place: Place) {
                 </div>
             </aside>
         </Transition>
+
+        <PlaceDetailDialog
+            v-model:open="placeDialogOpen"
+            :place="selectedPlace"
+        />
     </div>
 </template>
 
