@@ -19,22 +19,7 @@ export type ReviewCategory = {
     count: number;
 };
 
-export type ReviewPlace = {
-    id: number;
-    name: string;
-    description: string;
-    category: string;
-    categorySlug: string;
-    address: string;
-    city: string;
-    province: string;
-    country: string;
-    latitude: number;
-    longitude: number;
-    images?: PlaceImage[];
-};
-
-export type ManagePlace = {
+export type Place = {
     id: number;
     name: string;
     description: string;

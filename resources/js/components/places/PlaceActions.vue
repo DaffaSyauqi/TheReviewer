@@ -38,12 +38,12 @@ import {
     ChevronRight,
     Image,
 } from 'lucide-vue-next';
-import type { ManagePlace, PlaceImage } from '@/types';
+import type { Place, PlaceImage } from '@/types';
 
 interface Props {
     placeId: number;
     placeName: string;
-    place?: ManagePlace;
+    place?: Place;
 }
 
 const props = defineProps<Props>();

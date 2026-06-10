@@ -3,9 +3,9 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { ArrowUpDown } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import PlaceActions from './PlaceActions.vue';
-import type { ManagePlace } from '@/types';
+import type { Place } from '@/types';
 
-export const columns: ColumnDef<ManagePlace>[] = [
+export const columns: ColumnDef<Place>[] = [
     {
         accessorKey: 'name',
         header: ({ column }) =>
