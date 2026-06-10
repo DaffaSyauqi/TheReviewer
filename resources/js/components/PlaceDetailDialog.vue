@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 import type { Place, PlaceImage } from '@/types';
 
 import {
@@ -8,7 +8,7 @@ import {
     Map,
     Globe,
     Link as LinkIcon,
-    Star,
+    Image,
     ChevronLeft,
     ChevronRight,
 } from 'lucide-vue-next';
@@ -34,8 +34,15 @@ const emit = defineEmits<{
 }>();
 
 const currentImageIndex = ref(0);
+const openImageDialog = ref(false);
+const images = computed(() => props.place?.images || []);
 
-const images = ref<PlaceImage[]>(props.place?.images || []);
+watch(
+    () => props.place,
+    () => {
+        currentImageIndex.value = 0;
+    },
+);
 
 const nextImage = () => {
     if (images.value.length > 0) {
@@ -56,6 +63,11 @@ const selectImage = (index: number) => {
     currentImageIndex.value = index;
 };
 
+const openImagePreview = () => {
+    currentImageIndex.value = 0;
+    openImageDialog.value = true;
+};
+
 const formatValue = (value: any) => value || '-';
 </script>
 
@@ -65,20 +77,23 @@ const formatValue = (value: any) => value || '-';
             class="max-h-[98vh] max-w-[98vw] overflow-hidden p-0 sm:max-w-6xl"
         >
             <template v-if="place">
-                <DialogHeader class="px-6 pt-6">
+                <DialogHeader class="px-4 pt-4">
                     <DialogTitle> Detail Tempat </DialogTitle>
                 </DialogHeader>
 
-                <div class="px-6 pb-6">
-                    <!-- Carousel -->
-
+                <div class="px-4 pb-4">
                     <div v-if="images.length > 0" class="space-y-4">
                         <div class="relative h-72 rounded-lg bg-black">
-                            <img
-                                :src="images[currentImageIndex].url"
-                                :alt="`Image ${currentImageIndex + 1}`"
-                                class="h-full w-full object-cover"
-                            />
+                            <button
+                                @click="openImagePreview"
+                                class="h-full w-full cursor-pointer"
+                            >
+                                <img
+                                    :src="images[currentImageIndex].url"
+                                    :alt="`Image ${currentImageIndex + 1}`"
+                                    class="h-full w-full object-cover"
+                                />
+                            </button>
                             <button
                                 v-if="images.length > 1"
                                 @click="prevImage"
@@ -105,9 +120,7 @@ const formatValue = (value: any) => value || '-';
 
                     <Separator />
 
-                    <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_auto_1fr]">
-                        <!-- Left -->
-
+                    <div class="mt-4 grid gap-6 lg:grid-cols-[1fr_auto_1fr]">
                         <div class="space-y-4">
                             <div class="flex items-center gap-2">
                                 <h2
@@ -140,9 +153,7 @@ const formatValue = (value: any) => value || '-';
 
                         <Separator orientation="vertical" />
 
-                        <!-- Right -->
-
-                        <div class="space-y-4">
+                        <div class="space-y-2">
                             <div class="flex gap-3">
                                 <MapPin
                                     class="mt-0.5 h-4 w-4 shrink-0 text-primary"
@@ -225,18 +236,88 @@ const formatValue = (value: any) => value || '-';
                                         Link Maps
                                     </p>
 
-                                    <!-- <a
-                                        :href="place.maps_url"
+                                    <a
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class="text-sm font-medium text-primary hover:underline"
                                     >
                                         Buka di Google Maps
-                                    </a> -->
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <Dialog v-model:open="openImageDialog">
+                        <DialogContent class="max-w-2xl">
+                            <DialogHeader>
+                                <DialogTitle class="flex items-center gap-2">
+                                    <Image class="h-5 w-5" />
+                                    Image Preview
+                                </DialogTitle>
+                            </DialogHeader>
+
+                            <div v-if="images.length > 0" class="space-y-4">
+                                <div
+                                    class="relative flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-black"
+                                >
+                                    <img
+                                        :src="images[currentImageIndex].url"
+                                        :alt="`Image ${currentImageIndex + 1}`"
+                                        class="h-full w-full object-cover"
+                                    />
+                                    <button
+                                        v-if="images.length > 1"
+                                        @click="prevImage"
+                                        class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+                                    >
+                                        <ChevronLeft class="h-5 w-5" />
+                                    </button>
+                                    <button
+                                        v-if="images.length > 1"
+                                        @click="nextImage"
+                                        class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+                                    >
+                                        <ChevronRight class="h-5 w-5" />
+                                    </button>
+                                </div>
+
+                                <div
+                                    v-if="images.length > 1"
+                                    class="flex gap-2 overflow-x-auto pb-2"
+                                >
+                                    <button
+                                        v-for="(image, index) in images"
+                                        :key="image.id"
+                                        @click="selectImage(index)"
+                                        class="h-20 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition-colors"
+                                        :class="
+                                            currentImageIndex === index
+                                                ? 'border-primary'
+                                                : 'border-muted'
+                                        "
+                                    >
+                                        <img
+                                            :src="image.url"
+                                            :alt="`Thumbnail ${index + 1}`"
+                                            class="h-full w-full object-cover"
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div v-else class="py-12 text-center">
+                                <div class="mb-4 flex justify-center">
+                                    <Image
+                                        class="h-12 w-12 text-muted-foreground"
+                                    />
+                                </div>
+                                <p class="text-muted-foreground">
+                                    No images uploaded
+                                </p>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </template>
         </DialogContent>
