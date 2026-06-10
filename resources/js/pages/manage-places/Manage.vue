@@ -4,10 +4,10 @@ import { computed } from 'vue';
 import Heading from '@/components/Heading.vue';
 import DataTable from '@/components/places/DataTable.vue';
 import { columns } from '@/components/places/columns';
-import type { ManagePlace } from '@/types';
+import type { Place } from '@/types';
 
 defineProps<{
-    places: ManagePlace[];
+    places: Place[];
 }>();
 
 defineOptions({

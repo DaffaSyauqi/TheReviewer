@@ -12,21 +12,10 @@ class ReviewController extends Controller
     public function index(): Response
     {
         $places = Place::where('status', 'approved')
-            ->with('category')
-            ->get()
-            ->map(fn (Place $place): array => [
-                'id' => $place->id,
-                'name' => $place->name,
-                'description' => $place->description,
-                'category' => $place->category->name,
-                'categorySlug' => $place->category->slug,
-                'address' => $place->address,
-                'city' => $place->city,
-                'province' => $place->province,
-                'country' => $place->country,
-                'latitude' => $place->latitude,
-                'longitude' => $place->longitude,
-            ]);
+            ->with('category', 'images')
+            ->get();
+
+        $allCount = $places->count();
 
         $categories = Category::withCount(['places' => fn ($query) => $query->where('status', 'approved')])
             ->get()
@@ -36,8 +25,6 @@ class ReviewController extends Controller
                 'icon' => $category->icon,
                 'count' => $category->places_count,
             ]);
-
-        $allCount = $places->count();
 
         $categories = $categories->prepend([
             'id' => 'all',

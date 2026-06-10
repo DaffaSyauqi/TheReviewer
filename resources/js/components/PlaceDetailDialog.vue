@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { ReviewPlace, PlaceImage } from '@/types';
+import type { Place, PlaceImage } from '@/types';
 
 import {
     MapPin,
@@ -24,7 +24,7 @@ import { Separator } from '@/components/ui/separator';
 
 interface Props {
     open: boolean;
-    place: ReviewPlace | null;
+    place: Place | null;
 }
 
 const props = defineProps<Props>();
@@ -73,9 +73,7 @@ const formatValue = (value: any) => value || '-';
                     <!-- Carousel -->
 
                     <div v-if="images.length > 0" class="space-y-4">
-                        <div
-                            class="relative h-72 overflow-hidden rounded-lg bg-black"
-                        >
+                        <div class="relative h-72 rounded-lg bg-black">
                             <img
                                 :src="images[currentImageIndex].url"
                                 :alt="`Image ${currentImageIndex + 1}`"
@@ -121,7 +119,7 @@ const formatValue = (value: any) => value || '-';
                                 <span
                                     class="inline-flex items-center rounded-full border border-border px-2.5 py-0.5 text-sm font-medium text-primary"
                                 >
-                                    {{ formatValue(place.category) }}
+                                    {{ formatValue(place.category?.name) }}
                                 </span>
                             </div>
 
