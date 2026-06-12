@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, usePage, useForm } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { toast } from 'vue-sonner';
 import * as LucideIcons from 'lucide-vue-next';
 import Heading from '@/components/Heading.vue';
@@ -22,6 +22,22 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from '@/components/ui/command';
+import { Check } from 'lucide-vue-next';
+import { cn } from '@/lib/utils';
+import { useIndonesiaCities } from '@/composables/useIndonesiaCities';
 
 import type { CategoryInfo } from '@/types';
 
@@ -57,15 +73,28 @@ const form = useForm({
     images: [] as File[],
 });
 
+const { cities, citiesByProvince, isLoading, loadError, fetchCities } =
+    useIndonesiaCities();
+
+const cityComboboxOpen = ref(false);
+
+onMounted(() => {
+    fetchCities();
+});
+
+function onCitySelect(cityName: string) {
+    form.city = cityName;
+    const selectedCity = cities.value.find((c) => c.name === cityName);
+    if (selectedCity) {
+        form.province = selectedCity.province;
+    }
+    cityComboboxOpen.value = false;
+}
+
 const isUploadDialogOpen = ref(false);
 const uploadedImages = ref<
     Array<{ file: File; preview: string; name: string; size: string }>
 >([]);
-
-watch(isUploadDialogOpen, (isOpen) => {
-    if (!isOpen) {
-    }
-});
 
 const getIcon = (iconName: string | null) => {
     if (!iconName) return null;
@@ -177,7 +206,7 @@ const handleSubmit = () => {
                     <SelectTrigger class="mt-1 w-full">
                         <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent class="w-100">
                         <SelectItem
                             v-for="category in categories"
                             :key="category.id"
@@ -220,13 +249,76 @@ const handleSubmit = () => {
             </div>
 
             <div class="grid gap-2">
-                <Label for="city">City</Label>
-                <Input
-                    id="city"
-                    class="mt-1 block w-full"
-                    v-model="form.city"
-                    placeholder="City"
-                />
+                <Label>City</Label>
+                <Popover v-model:open="cityComboboxOpen">
+                    <PopoverTrigger as-child>
+                        <Button
+                            variant="outline"
+                            role="combobox"
+                            :aria-expanded="cityComboboxOpen"
+                            :aria-label="form.city || 'Select city'"
+                            class="mt-1 w-full justify-between font-normal"
+                        >
+                            <span v-if="form.city" class="truncate">
+                                {{ form.city }}
+                            </span>
+                            <span v-else class="text-muted-foreground">
+                                Select city...
+                            </span>
+                            <LucideIcons.ChevronsUpDown
+                                class="ml-2 h-4 w-4 shrink-0 opacity-50"
+                            />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent class="w-100 p-0" align="start">
+                        <Command>
+                            <CommandInput placeholder="Search city..." />
+                            <CommandList>
+                                <CommandEmpty
+                                    v-if="!isLoading && cities.length === 0"
+                                >
+                                    No city found.
+                                </CommandEmpty>
+                                <CommandEmpty v-if="isLoading">
+                                    Loading cities...
+                                </CommandEmpty>
+                                <CommandGroup
+                                    v-if="!isLoading"
+                                    v-for="[
+                                        province,
+                                        provinceCities,
+                                    ] in citiesByProvince"
+                                    :key="province"
+                                    :heading="province"
+                                >
+                                    <CommandItem
+                                        v-for="city in provinceCities"
+                                        :key="city.name"
+                                        :value="city.name"
+                                        @select="onCitySelect(city.name)"
+                                    >
+                                        <Check
+                                            :class="
+                                                cn(
+                                                    'mr-2 h-4 w-4',
+                                                    form.city === city.name
+                                                        ? 'opacity-100'
+                                                        : 'opacity-0',
+                                                )
+                                            "
+                                        />
+                                        {{ city.name }}
+                                        <span
+                                            class="ml-auto text-xs text-muted-foreground"
+                                        >
+                                            {{ city.type }}
+                                        </span>
+                                    </CommandItem>
+                                </CommandGroup>
+                            </CommandList>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
                 <InputError class="mt-2" :message="form.errors.city" />
             </div>
 
@@ -234,7 +326,7 @@ const handleSubmit = () => {
                 <Label for="province"
                     >Province
                     <span class="text-xs text-muted-foreground"
-                        >(Optional)</span
+                        >(Auto-filled from city)</span
                     ></Label
                 >
                 <Input
@@ -262,7 +354,7 @@ const handleSubmit = () => {
             </div>
 
             <div class="grid gap-2">
-                <Label for="country"
+                <Label for="images"
                     >Images<span class="text-xs text-muted-foreground"
                         >(Optional)</span
                     >
@@ -293,7 +385,7 @@ const handleSubmit = () => {
                         Upload Images
                     </DialogTitle>
                     <p class="mt-1 text-sm text-muted-foreground">
-                        Upload and manage images • Max 3 images
+                        Upload and manage images &bull; Max 3 images
                     </p>
                 </DialogHeader>
 
@@ -322,7 +414,7 @@ const handleSubmit = () => {
                             Browse Images
                         </Button>
                         <p class="mt-4 text-xs text-muted-foreground">
-                            PNG, JPG, JPEG, WEBP • Max 10MB per image
+                            PNG, JPG, JPEG, WEBP &bull; Max 10MB per image
                         </p>
                     </div>
 
@@ -334,10 +426,7 @@ const handleSubmit = () => {
                             </p>
                         </div>
 
-                        <div
-                            v-if="uploadedImages.length > 0"
-                            class="grid grid-cols-3 gap-4"
-                        >
+                        <div class="grid grid-cols-3 gap-4">
                             <div
                                 v-for="(image, index) in uploadedImages"
                                 :key="index"
