@@ -64,6 +64,35 @@ test('review page returns categories with approved place counts', function () {
         );
 });
 
+test('review page returns places with city field for client-side filtering', function () {
+    $category = Category::factory()->create(['name' => 'Wisata', 'slug' => 'wisata']);
+
+    Place::factory()->create([
+        'category_id' => $category->id,
+        'status' => 'approved',
+        'city' => 'Samarinda',
+        'name' => 'Samarinda Place',
+    ]);
+
+    Place::factory()->create([
+        'category_id' => $category->id,
+        'status' => 'approved',
+        'city' => 'Balikpapan',
+        'name' => 'Balikpapan Place',
+    ]);
+
+    $this->get(route('review'))
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Review')
+            ->where('places', function ($places) {
+                $samarinda = collect($places)->firstWhere('city', 'Samarinda');
+                $balikpapan = collect($places)->firstWhere('city', 'Balikpapan');
+
+                return $samarinda !== null && $balikpapan !== null && count($places) === 2;
+            })
+        );
+});
+
 test('review page returns empty data when no approved places exist', function () {
     Category::factory()->create(['name' => 'Wisata', 'slug' => 'wisata']);
     Place::factory()->create(['status' => 'pending']);
