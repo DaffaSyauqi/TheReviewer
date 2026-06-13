@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import * as LucideIcons from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,7 +29,6 @@ const search = ref('');
 const activeCategory = ref('all');
 
 const places = ref(props.places);
-const categories = ref(props.categories);
 
 const selectedPlace = ref<Place | null>(null);
 const placeDialogOpen = ref(false);
@@ -42,15 +41,40 @@ const getIcon = (iconName: string | null) => {
 function onRegionClick(payload: typeof selectedRegion.value) {
     loadError.value = null;
     selectedRegion.value = payload;
-    console.table(selectedRegion.value);
+    activeCategory.value = 'all';
+    search.value = '';
 }
 
 function closeSidebar() {
     selectedRegion.value = null;
 }
 
+const cityPlaces = computed(() => {
+    if (!selectedRegion.value) return places.value;
+    return places.value.filter(
+        (place) => place.city === selectedRegion.value!.city,
+    );
+});
+
+const cityCategories = computed(() => {
+    const base = props.categories.filter((c) => c.id !== 'all');
+    const cityCount = cityPlaces.value.length;
+
+    const mapped = base.map((c) => {
+        const count = cityPlaces.value.filter(
+            (p) => p.category.slug === c.id,
+        ).length;
+        return { ...c, count };
+    });
+
+    return [
+        { id: 'all', label: 'Semua', icon: 'LayoutGrid', count: cityCount },
+        ...mapped,
+    ];
+});
+
 const filteredPlaces = computed(() => {
-    return places.value.filter((place) => {
+    return cityPlaces.value.filter((place) => {
         const matchSearch =
             place.name.toLowerCase().includes(search.value.toLowerCase()) ||
             place.address.toLowerCase().includes(search.value.toLowerCase());
@@ -195,7 +219,7 @@ function openPlace(place: Place) {
                             class="mt-4 flex shrink-0 gap-2 overflow-x-auto pb-2"
                         >
                             <Button
-                                v-for="category in categories"
+                                v-for="category in cityCategories"
                                 :key="category.id"
                                 size="sm"
                                 :variant="
@@ -220,7 +244,10 @@ function openPlace(place: Place) {
                     </ScrollArea>
 
                     <!-- Places -->
-                    <div class="mt-4 min-h-0 flex-1">
+                    <div
+                        v-if="filteredPlaces.length > 0"
+                        class="mt-4 min-h-0 flex-1"
+                    >
                         <ScrollArea class="h-full">
                             <div class="space-y-3 pr-4">
                                 <button
@@ -262,6 +289,20 @@ function openPlace(place: Place) {
                                 </button>
                             </div>
                         </ScrollArea>
+                    </div>
+
+                    <div v-else class="py-12 text-center">
+                        <div class="mb-4 flex justify-center">
+                            <LucideIcons.MapPinX
+                                class="h-12 w-12 text-muted-foreground"
+                            />
+                        </div>
+                        <p class="mb-4 text-muted-foreground">
+                            No places found
+                        </p>
+                        <Link href="/manage-places/create">
+                            <Button>Add Places</Button>
+                        </Link>
                     </div>
                 </div>
             </aside>
