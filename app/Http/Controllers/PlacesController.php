@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreePlaceRequest;
 use App\Models\Category;
 use App\Models\Place;
-use App\Services\GeocodingService;
 use App\Services\ImageUploadService;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -31,17 +30,11 @@ class PlacesController extends Controller
         ]);
     }
 
-    public function store(StoreePlaceRequest $request, GeocodingService $geocodingService, ImageUploadService $imageUploadService)
+    public function store(StoreePlaceRequest $request, ImageUploadService $imageUploadService)
     {
         $validated = $request->validated();
 
         $category = Category::where('slug', $validated['category'])->first();
-
-        $coordinates = $geocodingService->geocode(
-            $validated['adress'],
-            $validated['city'],
-            $validated['country'] ?? null
-        );
 
         $place = Place::create([
             'user_id' => $request->user()->id,
@@ -53,8 +46,8 @@ class PlacesController extends Controller
             'city' => $validated['city'],
             'province' => $validated['province'] ?? '',
             'country' => $validated['country'] ?? '',
-            'latitude' => $coordinates['latitude'],
-            'longitude' => $coordinates['longitude'],
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude'],
             'status' => 'pending',
         ]);
 

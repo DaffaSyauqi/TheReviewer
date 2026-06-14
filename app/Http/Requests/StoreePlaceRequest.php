@@ -21,6 +21,8 @@ class StoreePlaceRequest extends FormRequest
             'city' => ['required', 'string', 'max:100'],
             'province' => ['nullable', 'string', 'max:100'],
             'country' => ['nullable', 'string', 'max:100'],
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
             'images' => ['nullable', 'array', 'max:3'],
             'images.*' => ['image', 'mimes:jpeg,png,webp', 'max:5120'],
         ];
@@ -35,6 +37,8 @@ class StoreePlaceRequest extends FormRequest
             'description.required' => 'Description is required.',
             'adress.required' => 'Address is required.',
             'city.required' => 'City is required.',
+            'latitude.required' => 'Location is required. Please select a location on the map.',
+            'longitude.required' => 'Location is required. Please select a location on the map.',
             'images.max' => 'You can upload a maximum of 3 images.',
             'images.*.image' => 'Each file must be a valid image.',
             'images.*.mimes' => 'Only JPEG, PNG, and WebP images are allowed.',
