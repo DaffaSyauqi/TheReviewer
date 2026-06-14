@@ -68,6 +68,11 @@ const openImagePreview = () => {
     openImageDialog.value = true;
 };
 
+const googleMapsUrl = computed(() => {
+    if (!props.place?.latitude || !props.place?.longitude) return null
+    return `https://maps.google.com/?q=${props.place.latitude},${props.place.longitude}`
+})
+
 const formatValue = (value: any) => value || '-';
 </script>
 
@@ -237,12 +242,17 @@ const formatValue = (value: any) => value || '-';
                                     </p>
 
                                     <a
+                                        v-if="googleMapsUrl"
+                                        :href="googleMapsUrl"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class="text-sm font-medium text-primary hover:underline"
                                     >
                                         Buka di Google Maps
                                     </a>
+                                    <p v-else class="text-sm font-medium text-muted-foreground">
+                                        Koordinat tidak tersedia
+                                    </p>
                                 </div>
                             </div>
                         </div>
