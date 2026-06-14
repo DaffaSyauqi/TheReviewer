@@ -39,6 +39,8 @@ import { Check } from 'lucide-vue-next';
 import { cn } from '@/lib/utils';
 import { useIndonesiaCities } from '@/composables/useIndonesiaCities';
 
+import { DialogLocationPicker } from '@/components/dialog';
+
 import type { CategoryInfo } from '@/types';
 
 type Props = {
@@ -70,7 +72,25 @@ const form = useForm({
     city: '',
     province: '',
     country: '',
+    latitude: 0 as number,
+    longitude: 0 as number,
     images: [] as File[],
+});
+
+const locationPickerOpen = ref(false);
+const hasSelectedLocation = ref(false);
+
+function onLocationConfirm(coords: { latitude: number; longitude: number }) {
+    hasSelectedLocation.value = true;
+}
+
+const locationDisplay = computed(() => {
+    if (
+        !hasSelectedLocation.value ||
+        (form.latitude === 0 && form.longitude === 0)
+    )
+        return null;
+    return `${form.latitude.toFixed(6)}, ${form.longitude.toFixed(6)}`;
 });
 
 const { cities, citiesByProvince, isLoading, loadError, fetchCities } =
@@ -352,6 +372,35 @@ const handleSubmit = () => {
                 />
                 <InputError class="mt-2" :message="form.errors.country" />
             </div>
+
+            <div class="grid gap-2">
+                <Label>Location</Label>
+                <Button
+                    type="button"
+                    variant="outline"
+                    @click="locationPickerOpen = true"
+                    class="w-full"
+                >
+                    <LucideIcons.MapPin class="mr-2 h-4 w-4" />
+                    <span v-if="locationDisplay" class="text-foreground">
+                        {{ locationDisplay }}
+                    </span>
+                    <span v-else class="text-muted-foreground">
+                        Select Location...
+                    </span>
+                </Button>
+                <InputError
+                    class="mt-2"
+                    :message="form.errors.latitude || form.errors.longitude"
+                />
+            </div>
+
+            <DialogLocationPicker
+                v-model:open="locationPickerOpen"
+                v-model:latitude="form.latitude"
+                v-model:longitude="form.longitude"
+                @confirm="onLocationConfirm"
+            />
 
             <div class="grid gap-2">
                 <Label for="images"
