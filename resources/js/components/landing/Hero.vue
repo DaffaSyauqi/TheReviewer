@@ -37,12 +37,14 @@ import PlanetIlusstration from '@/components/landing/PlanetIlusstration.vue';
                             EXPLORE_MAP
                         </Button>
                     </Link>
-                    <Button
-                        variant="outline"
-                        class="h-auto w-full justify-center rounded-none border-2 border-foreground bg-transparent px-6 py-4 text-xs font-black tracking-[0.2em] text-primary uppercase shadow-none transition-colors hover:bg-foreground/5 hover:text-primary hover:shadow-none sm:w-auto sm:px-10 sm:py-5"
-                    >
-                        ADD_LOCATION
-                    </Button>
+                    <Link href="/manage-places/create">
+                        <Button
+                            variant="outline"
+                            class="h-auto w-full justify-center rounded-none border-2 border-foreground bg-transparent px-6 py-4 text-xs font-black tracking-[0.2em] text-primary uppercase shadow-none transition-colors hover:bg-foreground/5 hover:text-primary hover:shadow-none sm:w-auto sm:px-10 sm:py-5"
+                        >
+                            ADD_LOCATION
+                        </Button>
+                    </Link>
                 </div>
             </div>
 

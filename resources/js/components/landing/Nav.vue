@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 <template>
     <nav
-        class="relative z-50 mx-auto flex max-w-7xl items-center justify-between px-6 py-8 sm:px-8 md:py-10 md:pl-28"
+        class="relative z-50 mx-auto flex max-w-7xl items-center px-6 py-8 sm:px-8 md:py-10 md:pl-28"
     >
         <div
             class="group flex cursor-pointer items-center gap-3 duration-500 ease-out"
@@ -22,12 +22,12 @@ import { Button } from '@/components/ui/button';
             >
         </div>
 
-        <Link href="/review">
+        <Link href="/login" class="ml-auto">
             <Button
                 variant="outline"
                 class="h-auto rounded-none border-none bg-foreground px-4 py-2 text-[10px] font-bold tracking-widest text-primary uppercase shadow-[4px_4px_0_var(--color-accent)] transition-all duration-300 hover:bg-accent hover:text-primary hover:shadow-none sm:px-6 sm:py-2"
             >
-                Launch_Map
+                Sign In
             </Button>
         </Link>
     </nav>
