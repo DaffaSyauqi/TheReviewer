@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AlertCircle } from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 import { computed } from 'vue';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -17,7 +17,7 @@ const uniqueErrors = computed(() => Array.from(new Set(props.errors)));
 
 <template>
     <Alert variant="destructive">
-        <AlertCircle class="size-4" />
+        <LucideIcons.AlertCircle class="size-4" />
         <AlertTitle>{{ title }}</AlertTitle>
         <AlertDescription>
             <ul class="list-inside list-disc text-sm">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MapPinned } from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 </script>
 
 <template>
@@ -14,7 +14,7 @@ import { MapPinned } from 'lucide-vue-next';
                     <div
                         class="flex h-8 w-8 items-center justify-center bg-accent"
                     >
-                        <MapPinned class="h-5 w-5 text-primary" />
+                        <LucideIcons.MapPinned class="h-5 w-5 text-primary" />
                     </div>
                     <span
                         class="font-display text-2xl font-black tracking-tight uppercase"

@@ -2,7 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { home } from '@/routes';
-import { MapPinned } from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 
 defineProps<{
     title?: string;
@@ -24,7 +24,7 @@ defineProps<{
                         <div
                             class="mb-1 flex h-9 w-9 items-center justify-center rounded-md"
                         >
-                            <MapPinned class="size-9 text-primary" />
+                            <LucideIcons.MapPinned class="size-9 text-primary" />
                         </div>
                         <span class="sr-only">{{ title }}</span>
                     </Link>

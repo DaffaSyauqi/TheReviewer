@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import {
-    CheckCircle2,
-    AlertCircle,
-    Clock,
-    MapPin,
-    Info,
-    LayoutGrid,
-} from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { Place } from '@/types';
 
@@ -20,9 +13,9 @@ interface Props {
 const props = defineProps<Props>();
 
 const getStatusIcon = (status: string) => {
-    if (status === 'approved') return CheckCircle2;
-    if (status === 'pending') return Clock;
-    return AlertCircle;
+    if (status === 'approved') return LucideIcons.CheckCircle2;
+    if (status === 'pending') return LucideIcons.Clock;
+    return LucideIcons.AlertCircle;
 };
 
 const getStatusColor = (status: string) => {
@@ -53,7 +46,7 @@ const statusIcon = computed(() =>
                     <div
                         class="flex h-6 w-6 items-center justify-center rounded bg-blue-100"
                     >
-                        <LayoutGrid class="h-4 w-4 text-blue-600" />
+                        <LucideIcons.LayoutGrid class="h-4 w-4 text-blue-600" />
                     </div>
                     <h3 class="text-lg font-semibold text-foreground">
                         General Information
@@ -116,7 +109,7 @@ const statusIcon = computed(() =>
                     <div
                         class="flex h-6 w-6 items-center justify-center rounded bg-red-100"
                     >
-                        <MapPin class="h-4 w-4 text-red-600" />
+                        <LucideIcons.MapPin class="h-4 w-4 text-red-600" />
                     </div>
                     <h3 class="text-lg font-semibold text-foreground">
                         Location Details
@@ -173,7 +166,7 @@ const statusIcon = computed(() =>
                     <div
                         class="flex h-6 w-6 items-center justify-center rounded bg-orange-100"
                     >
-                        <Info class="h-4 w-4 text-orange-600" />
+                        <LucideIcons.Info class="h-4 w-4 text-orange-600" />
                     </div>
                     <h3 class="text-lg font-semibold text-foreground">
                         Status Information

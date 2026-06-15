@@ -32,15 +32,7 @@ import {
     DrawerTitle,
 } from '@/components/ui/drawer';
 import { useMediaQuery } from '@vueuse/core';
-import {
-    MoreHorizontal,
-    ChevronLeft,
-    ChevronRight,
-    Image,
-    List,
-    CircleCheck,
-    CircleX,
-} from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 import type { Place, PlaceImage } from '@/types';
 
 interface Props {
@@ -102,25 +94,25 @@ const openImagePreview = () => {
     <DropdownMenu v-model:open="openDropdown">
         <DropdownMenuTrigger asChild>
             <Button variant="ghost" class="h-8 w-8 p-0">
-                <MoreHorizontal class="h-4 w-4" />
+                <LucideIcons.MoreHorizontal class="h-4 w-4" />
             </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
             <DropdownMenuItem @click="openDetailsDialog = true">
-                <span><List /></span>
+                <span><LucideIcons.List /></span>
                 View Details
             </DropdownMenuItem>
             <DropdownMenuItem @click="openImagePreview">
-                <span><Image /></span>
+                <span><LucideIcons.Image /></span>
                 Images
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem @click="openApproveDialog = true">
-                <span><CircleCheck /></span>
+                <span><LucideIcons.CircleCheck /></span>
                 Approve
             </DropdownMenuItem>
             <DropdownMenuItem @click="openRejectDialog = true">
-                <span><CircleX /></span>
+                <span><LucideIcons.CircleX /></span>
                 Reject
             </DropdownMenuItem>
         </DropdownMenuContent>
@@ -132,7 +124,7 @@ const openImagePreview = () => {
             <DialogContent class="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle class="flex items-center gap-2">
-                        <List class="h-5 w-5 text-primary" />
+                        <LucideIcons.List class="h-5 w-5 text-primary" />
                         Detail Information
                     </DialogTitle>
                 </DialogHeader>
@@ -149,7 +141,7 @@ const openImagePreview = () => {
             <DrawerContent>
                 <DrawerHeader>
                     <DrawerTitle class="flex items-center gap-2">
-                        <List class="h-5 w-5 text-primary" />
+                        <LucideIcons.List class="h-5 w-5 text-primary" />
                         Detail Information
                     </DrawerTitle>
                 </DrawerHeader>
@@ -169,7 +161,7 @@ const openImagePreview = () => {
         <DialogContent class="max-w-2xl">
             <DialogHeader>
                 <DialogTitle class="flex items-center gap-2">
-                    <Image class="h-5 w-5 text-primary" />
+                    <LucideIcons.Image class="h-5 w-5 text-primary" />
                     Image Preview
                 </DialogTitle>
             </DialogHeader>
@@ -188,14 +180,14 @@ const openImagePreview = () => {
                         @click="prevImage"
                         class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
                     >
-                        <ChevronLeft class="h-5 w-5" />
+                        <LucideIcons.ChevronLeft class="h-5 w-5" />
                     </button>
                     <button
                         v-if="images.length > 1"
                         @click="nextImage"
                         class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
                     >
-                        <ChevronRight class="h-5 w-5" />
+                        <LucideIcons.ChevronRight class="h-5 w-5" />
                     </button>
                 </div>
 
@@ -225,7 +217,7 @@ const openImagePreview = () => {
 
             <div v-else class="py-12 text-center">
                 <div class="mb-4 flex justify-center">
-                    <Image class="h-12 w-12 text-muted-foreground" />
+                    <LucideIcons.Image class="h-12 w-12 text-muted-foreground" />
                 </div>
                 <p class="text-muted-foreground">No images uploaded</p>
             </div>

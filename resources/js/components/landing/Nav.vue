@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { MapPinned } from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 </script>
 
@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
             <div
                 class="flex h-8 w-8 transform items-center justify-center rounded-none bg-foreground transition-transform"
             >
-                <MapPinned class="h-5 w-5 text-accent" />
+                <LucideIcons.MapPinned class="h-5 w-5 text-accent" />
             </div>
             <span
                 class="font-display text-xl font-black tracking-tighter uppercase"

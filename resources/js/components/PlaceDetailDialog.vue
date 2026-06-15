@@ -2,17 +2,7 @@
 import { ref, computed, watch } from 'vue';
 import type { Place, PlaceImage } from '@/types';
 
-import {
-    MapPin,
-    Building2,
-    Map,
-    Globe,
-    Link as LinkIcon,
-    Image,
-    ChevronLeft,
-    ChevronRight,
-    ListCollapse,
-} from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 
 import {
     Dialog,
@@ -85,7 +75,7 @@ const formatValue = (value: any) => value || '-';
             <template v-if="place">
                 <DialogHeader class="px-4 pt-4">
                     <DialogTitle class="flex items-center gap-2">
-                        <ListCollapse class="h-5 w-5 text-primary" />Place
+                        <LucideIcons.ListCollapse class="h-5 w-5 text-primary" />Place
                         Details
                     </DialogTitle>
                 </DialogHeader>
@@ -108,21 +98,21 @@ const formatValue = (value: any) => value || '-';
                                 @click="prevImage"
                                 class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
                             >
-                                <ChevronLeft class="h-5 w-5" />
+                                <LucideIcons.ChevronLeft class="h-5 w-5" />
                             </button>
                             <button
                                 v-if="images.length > 1"
                                 @click="nextImage"
                                 class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
                             >
-                                <ChevronRight class="h-5 w-5" />
+                                <LucideIcons.ChevronRight class="h-5 w-5" />
                             </button>
                         </div>
                     </div>
 
                     <div v-else class="py-12 text-center">
                         <div class="mb-4 flex justify-center">
-                            <Image class="h-12 w-12 text-muted-foreground" />
+                            <LucideIcons.Image class="h-12 w-12 text-muted-foreground" />
                         </div>
                         <p class="text-muted-foreground">No images uploaded</p>
                     </div>
@@ -164,7 +154,7 @@ const formatValue = (value: any) => value || '-';
 
                         <div class="space-y-2">
                             <div class="flex gap-3">
-                                <MapPin
+                                <LucideIcons.MapPin
                                     class="mt-0.5 h-4 w-4 shrink-0 text-primary"
                                 />
 
@@ -182,7 +172,7 @@ const formatValue = (value: any) => value || '-';
                             <Separator />
 
                             <div class="flex gap-3">
-                                <Building2
+                                <LucideIcons.Building2
                                     class="mt-0.5 h-4 w-4 shrink-0 text-primary"
                                 />
 
@@ -200,7 +190,7 @@ const formatValue = (value: any) => value || '-';
                             <Separator />
 
                             <div class="flex gap-3">
-                                <Map
+                                <LucideIcons.Map
                                     class="mt-0.5 h-4 w-4 shrink-0 text-primary"
                                 />
 
@@ -218,7 +208,7 @@ const formatValue = (value: any) => value || '-';
                             <Separator />
 
                             <div class="flex gap-3">
-                                <Globe
+                                <LucideIcons.Globe
                                     class="mt-0.5 h-4 w-4 shrink-0 text-primary"
                                 />
 
@@ -236,7 +226,7 @@ const formatValue = (value: any) => value || '-';
                             <Separator />
 
                             <div class="flex gap-3">
-                                <LinkIcon
+                                <LucideIcons.Link
                                     class="mt-0.5 h-4 w-4 shrink-0 text-primary"
                                 />
 
@@ -269,7 +259,7 @@ const formatValue = (value: any) => value || '-';
                         <DialogContent class="max-w-2xl">
                             <DialogHeader>
                                 <DialogTitle class="flex items-center gap-2">
-                                    <Image class="h-5 w-5 text-primary" />
+                                    <LucideIcons.Image class="h-5 w-5 text-primary" />
                                     Image Preview
                                 </DialogTitle>
                             </DialogHeader>
@@ -288,14 +278,14 @@ const formatValue = (value: any) => value || '-';
                                         @click="prevImage"
                                         class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
                                     >
-                                        <ChevronLeft class="h-5 w-5" />
+                                        <LucideIcons.ChevronLeft class="h-5 w-5" />
                                     </button>
                                     <button
                                         v-if="images.length > 1"
                                         @click="nextImage"
                                         class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
                                     >
-                                        <ChevronRight class="h-5 w-5" />
+                                        <LucideIcons.ChevronRight class="h-5 w-5" />
                                     </button>
                                 </div>
 
@@ -325,7 +315,7 @@ const formatValue = (value: any) => value || '-';
 
                             <div v-else class="py-12 text-center">
                                 <div class="mb-4 flex justify-center">
-                                    <Image
+                                    <LucideIcons.Image
                                         class="h-12 w-12 text-muted-foreground"
                                     />
                                 </div>

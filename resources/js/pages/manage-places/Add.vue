@@ -35,7 +35,6 @@ import {
     CommandItem,
     CommandList,
 } from '@/components/ui/command';
-import { Check } from 'lucide-vue-next';
 import { cn } from '@/lib/utils';
 import { useIndonesiaCities } from '@/composables/useIndonesiaCities';
 
@@ -317,7 +316,7 @@ const handleSubmit = () => {
                                         :value="city.name"
                                         @select="onCitySelect(city.name)"
                                     >
-                                        <Check
+                                        <LucideIcons.Check
                                             :class="
                                                 cn(
                                                     'mr-2 h-4 w-4',
