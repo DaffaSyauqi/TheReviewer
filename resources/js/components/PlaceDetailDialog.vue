@@ -69,9 +69,9 @@ const openImagePreview = () => {
 };
 
 const googleMapsUrl = computed(() => {
-    if (!props.place?.latitude || !props.place?.longitude) return null
-    return `https://maps.google.com/?q=${props.place.latitude},${props.place.longitude}`
-})
+    if (!props.place?.latitude || !props.place?.longitude) return null;
+    return `https://maps.google.com/?q=${props.place.latitude},${props.place.longitude}`;
+});
 
 const formatValue = (value: any) => value || '-';
 </script>
@@ -83,7 +83,7 @@ const formatValue = (value: any) => value || '-';
         >
             <template v-if="place">
                 <DialogHeader class="px-4 pt-4">
-                    <DialogTitle> Detail Tempat </DialogTitle>
+                    <DialogTitle> Place Details </DialogTitle>
                 </DialogHeader>
 
                 <div class="px-4 pb-4">
@@ -145,7 +145,7 @@ const formatValue = (value: any) => value || '-';
 
                             <div>
                                 <h3 class="text-md mb-2 font-semibold">
-                                    Deskripsi
+                                    Description
                                 </h3>
 
                                 <p
@@ -166,7 +166,7 @@ const formatValue = (value: any) => value || '-';
 
                                 <div>
                                     <p class="text-xs text-muted-foreground">
-                                        Alamat
+                                        Address
                                     </p>
 
                                     <p class="text-sm font-medium">
@@ -184,7 +184,7 @@ const formatValue = (value: any) => value || '-';
 
                                 <div>
                                     <p class="text-xs text-muted-foreground">
-                                        Kota
+                                        City
                                     </p>
 
                                     <p class="text-sm font-medium">
@@ -202,7 +202,7 @@ const formatValue = (value: any) => value || '-';
 
                                 <div>
                                     <p class="text-xs text-muted-foreground">
-                                        Provinsi
+                                        Province
                                     </p>
 
                                     <p class="text-sm font-medium">
@@ -220,7 +220,7 @@ const formatValue = (value: any) => value || '-';
 
                                 <div>
                                     <p class="text-xs text-muted-foreground">
-                                        Negara
+                                        Country
                                     </p>
 
                                     <p class="text-sm font-medium">
@@ -238,7 +238,7 @@ const formatValue = (value: any) => value || '-';
 
                                 <div>
                                     <p class="text-xs text-muted-foreground">
-                                        Link Maps
+                                        Maps Link
                                     </p>
 
                                     <a
@@ -248,10 +248,13 @@ const formatValue = (value: any) => value || '-';
                                         rel="noopener noreferrer"
                                         class="text-sm font-medium text-primary hover:underline"
                                     >
-                                        Buka di Google Maps
+                                        Open in Google Maps
                                     </a>
-                                    <p v-else class="text-sm font-medium text-muted-foreground">
-                                        Koordinat tidak tersedia
+                                    <p
+                                        v-else
+                                        class="text-sm font-medium text-muted-foreground"
+                                    >
+                                        Coordinates not available
                                     </p>
                                 </div>
                             </div>
