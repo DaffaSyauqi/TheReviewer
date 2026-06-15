@@ -430,7 +430,7 @@ const handleSubmit = () => {
             <DialogContent class="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle class="flex items-center gap-2">
-                        <LucideIcons.Upload class="h-5 w-5" />
+                        <LucideIcons.Upload class="h-5 w-5 text-primary" />
                         Upload Images
                     </DialogTitle>
                     <p class="mt-1 text-sm text-muted-foreground">

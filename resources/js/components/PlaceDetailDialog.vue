@@ -11,6 +11,7 @@ import {
     Image,
     ChevronLeft,
     ChevronRight,
+    ListCollapse,
 } from 'lucide-vue-next';
 
 import {
@@ -83,7 +84,10 @@ const formatValue = (value: any) => value || '-';
         >
             <template v-if="place">
                 <DialogHeader class="px-4 pt-4">
-                    <DialogTitle> Place Details </DialogTitle>
+                    <DialogTitle class="flex items-center gap-2">
+                        <ListCollapse class="h-5 w-5 text-primary" />Place
+                        Details
+                    </DialogTitle>
                 </DialogHeader>
 
                 <div class="px-4 pb-4">
@@ -265,7 +269,7 @@ const formatValue = (value: any) => value || '-';
                         <DialogContent class="max-w-2xl">
                             <DialogHeader>
                                 <DialogTitle class="flex items-center gap-2">
-                                    <Image class="h-5 w-5" />
+                                    <Image class="h-5 w-5 text-primary" />
                                     Image Preview
                                 </DialogTitle>
                             </DialogHeader>

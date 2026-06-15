@@ -37,6 +37,8 @@ import {
     ChevronLeft,
     ChevronRight,
     Image,
+    List,
+    Trash2,
 } from 'lucide-vue-next';
 import type { Place, PlaceImage } from '@/types';
 
@@ -97,13 +99,16 @@ const openImagePreview = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
             <DropdownMenuItem @click="openDetailsDialog = true">
+                <span><List /></span>
                 View Details
             </DropdownMenuItem>
             <DropdownMenuItem @click="openImagePreview">
+                <span><Image /></span>
                 Images
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem @click="openDeleteDialog = true">
+                <span><Trash2 /></span>
                 Delete
             </DropdownMenuItem>
         </DropdownMenuContent>
@@ -114,7 +119,10 @@ const openImagePreview = () => {
         <Dialog v-model:open="openDetailsDialog">
             <DialogContent class="max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>Detail Information</DialogTitle>
+                    <DialogTitle class="flex items-center gap-2">
+                        <List class="h-5 w-5 text-primary" />
+                        Detail Information
+                    </DialogTitle>
                 </DialogHeader>
                 <PlaceDetailsContent
                     :place="place"
@@ -128,7 +136,10 @@ const openImagePreview = () => {
         <Drawer v-model:open="openDetailsDialog">
             <DrawerContent>
                 <DrawerHeader>
-                    <DrawerTitle>Detail Information</DrawerTitle>
+                    <DrawerTitle class="flex items-center gap-2">
+                        <List class="h-5 w-5 text-primary" />
+                        Detail Information
+                    </DrawerTitle>
                 </DrawerHeader>
                 <div class="px-4 pb-6">
                     <PlaceDetailsContent
@@ -146,7 +157,7 @@ const openImagePreview = () => {
         <DialogContent class="max-w-2xl">
             <DialogHeader>
                 <DialogTitle class="flex items-center gap-2">
-                    <Image class="h-5 w-5" />
+                    <Image class="h-5 w-5 text-primary" />
                     Image Preview
                 </DialogTitle>
             </DialogHeader>
