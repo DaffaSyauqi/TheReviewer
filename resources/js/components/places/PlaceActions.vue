@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PlaceDetailsContent from './PlaceDetailsContent.vue';
+import { DetailInformationDialog, ImagePreviewDialog } from '@/components/dialog';
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
@@ -19,21 +19,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import {
-    Drawer,
-    DrawerContent,
-    DrawerHeader,
-    DrawerTitle,
-} from '@/components/ui/drawer';
-import { useMediaQuery } from '@vueuse/core';
 import * as LucideIcons from 'lucide-vue-next';
-import { ImagePreviewDialog } from '@/components/dialog';
 import type { Place, PlaceImage } from '@/types';
 
 interface Props {
@@ -48,7 +34,6 @@ const openDeleteDialog = ref(false);
 const openDropdown = ref(false);
 const openDetailsDialog = ref(false);
 const openImageDialog = ref(false);
-const isDesktop = useMediaQuery('(min-width: 768px)');
 
 const images = ref<PlaceImage[]>(props.place?.images || []);
 
@@ -87,43 +72,12 @@ const openImagePreview = () => {
         </DropdownMenuContent>
     </DropdownMenu>
 
-    <!-- Details Dialog (Desktop) / Drawer (Mobile) -->
-    <template v-if="isDesktop">
-        <Dialog v-model:open="openDetailsDialog">
-            <DialogContent class="max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle class="flex items-center gap-2">
-                        <LucideIcons.List class="h-5 w-5 text-primary" />
-                        Detail Information
-                    </DialogTitle>
-                </DialogHeader>
-                <PlaceDetailsContent
-                    :place="place"
-                    :placeId="placeId"
-                    :placeName="placeName"
-                />
-            </DialogContent>
-        </Dialog>
-    </template>
-    <template v-else>
-        <Drawer v-model:open="openDetailsDialog">
-            <DrawerContent>
-                <DrawerHeader>
-                    <DrawerTitle class="flex items-center gap-2">
-                        <LucideIcons.List class="h-5 w-5 text-primary" />
-                        Detail Information
-                    </DrawerTitle>
-                </DrawerHeader>
-                <div class="px-4 pb-6">
-                    <PlaceDetailsContent
-                        :place="place"
-                        :placeId="placeId"
-                        :placeName="placeName"
-                    />
-                </div>
-            </DrawerContent>
-        </Drawer>
-    </template>
+    <DetailInformationDialog
+        v-model:open="openDetailsDialog"
+        :place="place"
+        :placeId="placeId"
+        :placeName="placeName"
+    />
 
     <!-- Image Preview Dialog -->
     <ImagePreviewDialog

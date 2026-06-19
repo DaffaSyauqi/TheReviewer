@@ -7,7 +7,7 @@ import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
-import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
+import { TwoFactorSetupDialog } from '@/components/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
@@ -172,7 +172,7 @@ onUnmounted(() => clearTwoFactorAuthData());
             <TwoFactorRecoveryCodes />
         </div>
 
-        <TwoFactorSetupModal
+        <TwoFactorSetupDialog
             v-model:isOpen="showSetupModal"
             :requiresConfirmation="requiresConfirmation"
             :twoFactorEnabled="twoFactorEnabled"

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type { Place, PlaceImage } from '@/types';
-
+import type { Place } from '@/types';
 import * as LucideIcons from 'lucide-vue-next';
 
 import {
@@ -48,8 +47,9 @@ const formatValue = (value: any) => value || '-';
             <template v-if="place">
                 <DialogHeader class="px-4 pt-4">
                     <DialogTitle class="flex items-center gap-2">
-                        <LucideIcons.ListCollapse class="h-5 w-5 text-primary" />Place
-                        Details
+                        <LucideIcons.ListCollapse
+                            class="h-5 w-5 text-primary"
+                        />Place Details
                     </DialogTitle>
                 </DialogHeader>
 
@@ -71,7 +71,9 @@ const formatValue = (value: any) => value || '-';
 
                     <div v-else class="py-12 text-center">
                         <div class="mb-4 flex justify-center">
-                            <LucideIcons.Image class="h-12 w-12 text-muted-foreground" />
+                            <LucideIcons.Image
+                                class="h-12 w-12 text-muted-foreground"
+                            />
                         </div>
                         <p class="text-muted-foreground">No images uploaded</p>
                     </div>

@@ -8,7 +8,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import NavBar from '@/components/NavBar.vue';
 import { Map } from '@/components/map';
 import { MapIndonesia } from '@/components/map';
-import PlaceDetailDialog from '@/components/PlaceDetailDialog.vue';
+import PlaceDetailDialog from '@/components/dialog/PlaceDetailDialog.vue';
 import type { Place, ReviewCategory } from '@/types';
 
 const props = defineProps<{
