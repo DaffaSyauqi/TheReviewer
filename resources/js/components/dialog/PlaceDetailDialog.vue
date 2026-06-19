@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useMediaQuery } from '@vueuse/core';
 import type { Place } from '@/types';
 import * as LucideIcons from 'lucide-vue-next';
 
@@ -10,6 +11,14 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 
+import {
+    Drawer,
+    DrawerContent,
+    DrawerHeader,
+    DrawerTitle,
+} from '@/components/ui/drawer';
+
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { ImagePreviewDialog } from '@/components/dialog';
 
@@ -23,6 +32,8 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
     'update:open': [value: boolean];
 }>();
+
+const isDesktop = useMediaQuery('(min-width: 768px)');
 
 const openImageDialog = ref(false);
 const images = computed(() => props.place?.images || []);
@@ -40,7 +51,11 @@ const formatValue = (value: any) => value || '-';
 </script>
 
 <template>
-    <Dialog :open="open" @update:open="emit('update:open', $event)">
+    <Dialog
+        v-if="isDesktop"
+        :open="open"
+        @update:open="emit('update:open', $event)"
+    >
         <DialogContent
             class="max-h-[98vh] max-w-[98vw] overflow-hidden p-0 sm:max-w-6xl"
         >
@@ -224,4 +239,202 @@ const formatValue = (value: any) => value || '-';
             </template>
         </DialogContent>
     </Dialog>
+
+    <Drawer
+        v-if="!isDesktop"
+        :open="open"
+        @update:open="emit('update:open', $event)"
+    >
+        <DrawerContent>
+            <DrawerHeader>
+                <DrawerTitle class="flex items-center gap-2">
+                    <LucideIcons.ListCollapse
+                        class="h-5 w-5 text-primary"
+                    />Place Details
+                </DrawerTitle>
+            </DrawerHeader>
+            <div class="px-4 pb-6">
+                <ScrollArea class="h-100 pr-6">
+                    <template v-if="place">
+                        <div v-if="images.length > 0" class="space-y-4">
+                            <div class="relative h-48 rounded-lg bg-black">
+                                <button
+                                    @click="openImagePreview"
+                                    class="h-full w-full cursor-pointer"
+                                >
+                                    <img
+                                        :src="images[0].url"
+                                        :alt="`Image 1`"
+                                        class="h-full w-full object-cover"
+                                    />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div v-else class="py-8 text-center">
+                            <div class="mb-3 flex justify-center">
+                                <LucideIcons.Image
+                                    class="h-10 w-10 text-muted-foreground"
+                                />
+                            </div>
+                            <p class="text-muted-foreground">
+                                No images uploaded
+                            </p>
+                        </div>
+
+                        <Separator />
+
+                        <div class="mt-4 space-y-4">
+                            <div class="flex items-center gap-2">
+                                <h2
+                                    class="inline-flex items-center text-lg leading-tight font-semibold text-foreground"
+                                >
+                                    {{ formatValue(place.name) }}
+                                </h2>
+
+                                <span
+                                    class="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-xs font-medium text-primary"
+                                >
+                                    {{ formatValue(place.category?.name) }}
+                                </span>
+                            </div>
+
+                            <Separator />
+
+                            <div>
+                                <h3 class="text-md mb-2 font-semibold">
+                                    Description
+                                </h3>
+
+                                <p
+                                    class="text-sm leading-6 text-muted-foreground"
+                                >
+                                    {{ formatValue(place.description) }}
+                                </p>
+                            </div>
+
+                            <Separator />
+
+                            <div class="space-y-2">
+                                <div class="flex gap-3">
+                                    <LucideIcons.MapPin
+                                        class="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                                    />
+
+                                    <div>
+                                        <p
+                                            class="text-xs text-muted-foreground"
+                                        >
+                                            Address
+                                        </p>
+
+                                        <p class="text-sm font-medium">
+                                            {{ formatValue(place.address) }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <Separator />
+
+                                <div class="flex gap-3">
+                                    <LucideIcons.Building2
+                                        class="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                                    />
+
+                                    <div>
+                                        <p
+                                            class="text-xs text-muted-foreground"
+                                        >
+                                            City
+                                        </p>
+
+                                        <p class="text-sm font-medium">
+                                            {{ formatValue(place.city) }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <Separator />
+
+                                <div class="flex gap-3">
+                                    <LucideIcons.Map
+                                        class="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                                    />
+
+                                    <div>
+                                        <p
+                                            class="text-xs text-muted-foreground"
+                                        >
+                                            Province
+                                        </p>
+
+                                        <p class="text-sm font-medium">
+                                            {{ formatValue(place.province) }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <Separator />
+
+                                <div class="flex gap-3">
+                                    <LucideIcons.Globe
+                                        class="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                                    />
+
+                                    <div>
+                                        <p
+                                            class="text-xs text-muted-foreground"
+                                        >
+                                            Country
+                                        </p>
+
+                                        <p class="text-sm font-medium">
+                                            {{ formatValue(place.country) }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <Separator />
+
+                                <div class="flex gap-3">
+                                    <LucideIcons.Link
+                                        class="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                                    />
+
+                                    <div>
+                                        <p
+                                            class="text-xs text-muted-foreground"
+                                        >
+                                            Maps Link
+                                        </p>
+
+                                        <a
+                                            v-if="googleMapsUrl"
+                                            :href="googleMapsUrl"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="text-sm font-medium text-primary hover:underline"
+                                        >
+                                            Open in Google Maps
+                                        </a>
+                                        <p
+                                            v-else
+                                            class="text-sm font-medium text-muted-foreground"
+                                        >
+                                            Coordinates not available
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ImagePreviewDialog
+                            v-model:open="openImageDialog"
+                            :images="images"
+                        />
+                    </template>
+                </ScrollArea>
+            </div>
+        </DrawerContent>
+    </Drawer>
 </template>

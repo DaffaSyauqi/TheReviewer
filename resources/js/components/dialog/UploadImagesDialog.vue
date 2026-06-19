@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import * as LucideIcons from 'lucide-vue-next';
+import { useMediaQuery } from '@vueuse/core';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -7,6 +8,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import {
+    Drawer,
+    DrawerContent,
+    DrawerHeader,
+    DrawerTitle,
+} from '@/components/ui/drawer';
 import { toast } from 'vue-sonner';
 
 type UploadedImage = {
@@ -36,6 +43,8 @@ const emit = defineEmits<{
     'update:open': [value: boolean]
     'update:images': [images: UploadedImage[]]
 }>()
+
+const isDesktop = useMediaQuery('(min-width: 768px)');
 
 const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 B'
@@ -108,7 +117,11 @@ const handleClose = () => {
 </script>
 
 <template>
-    <Dialog :open="open" @update:open="emit('update:open', $event)">
+    <Dialog
+        v-if="isDesktop"
+        :open="open"
+        @update:open="emit('update:open', $event)"
+    >
         <DialogContent class="max-w-2xl">
             <DialogHeader>
                 <DialogTitle class="flex items-center gap-2">
@@ -215,4 +228,117 @@ const handleClose = () => {
             </div>
         </DialogContent>
     </Dialog>
+
+    <Drawer
+        v-if="!isDesktop"
+        :open="open"
+        @update:open="emit('update:open', $event)"
+    >
+        <DrawerContent>
+            <DrawerHeader>
+                <DrawerTitle class="flex items-center gap-2">
+                    <LucideIcons.Upload class="h-5 w-5 text-primary" />
+                    Upload Images
+                </DrawerTitle>
+                <p class="mt-1 text-sm text-muted-foreground">
+                    Upload and manage images &bull; Max {{ maxImages }} images
+                </p>
+            </DrawerHeader>
+            <div class="px-4 pb-6">
+                <div class="space-y-6">
+                    <div
+                        @dragover="handleDragOver"
+                        @drop="handleDrop"
+                        class="cursor-pointer rounded-lg border-2 border-dashed border-muted-foreground/30 p-6 text-center transition-colors hover:border-muted-foreground/50"
+                    >
+                        <LucideIcons.Image
+                            class="mx-auto mb-3 h-10 w-10 text-muted-foreground"
+                        />
+                        <p class="mb-1 font-medium">
+                            Drag and drop images here
+                        </p>
+                        <p class="mb-3 text-sm text-muted-foreground">
+                            or tap to browse from your device
+                        </p>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            @click="handleBrowseClick"
+                        >
+                            <LucideIcons.FolderOpen class="mr-2 h-4 w-4" />
+                            Browse Images
+                        </Button>
+                        <p class="mt-3 text-xs text-muted-foreground">
+                            PNG, JPG, JPEG, WEBP &bull; {{ maxSizeLabel }}
+                        </p>
+                    </div>
+
+                    <div v-if="images.length > 0">
+                        <div class="mb-4 flex items-center justify-between">
+                            <h3 class="font-medium">Image Preview</h3>
+                            <p class="text-sm text-muted-foreground">
+                                {{ images.length }} / {{ maxImages }} images
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div
+                                v-for="(image, index) in images"
+                                :key="index"
+                                class="group relative"
+                            >
+                                <div
+                                    class="relative aspect-square overflow-hidden rounded-lg bg-muted"
+                                >
+                                    <img
+                                        :src="image.preview"
+                                        :alt="image.name"
+                                        class="h-full w-full object-cover"
+                                    />
+                                    <div
+                                        class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100"
+                                    >
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            @click="removeImage(index)"
+                                            class="h-8 w-8 rounded-full bg-destructive/20 hover:bg-destructive/30"
+                                        >
+                                            <LucideIcons.Trash2
+                                                class="h-4 w-4 text-destructive"
+                                            />
+                                        </Button>
+                                    </div>
+                                </div>
+                                <p class="mt-1 truncate text-xs font-medium">
+                                    {{ image.name }}
+                                </p>
+                                <p class="text-xs text-muted-foreground">
+                                    {{ image.size }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-else class="py-6 text-center">
+                        <LucideIcons.Image
+                            class="mx-auto mb-2 h-8 w-8 text-muted-foreground/50"
+                        />
+                        <p class="mb-1 text-sm text-muted-foreground">
+                            No images uploaded yet
+                        </p>
+                        <p class="text-xs text-muted-foreground">
+                            Uploaded images will appear here
+                        </p>
+                    </div>
+
+                    <Button type="button" class="w-full" @click="handleClose">
+                        Close
+                    </Button>
+                </div>
+            </div>
+        </DrawerContent>
+    </Drawer>
 </template>
