@@ -14,6 +14,11 @@ class ImageUploadService
 
     public function __construct() {}
 
+    public function delete(string $path): void
+    {
+        Storage::disk(self::STORAGE_DISK)->delete($path);
+    }
+
     public function upload(UploadedFile $file, int $placeId): array
     {
         $imageData = $this->processImage($file);
