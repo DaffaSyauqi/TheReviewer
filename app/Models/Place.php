@@ -28,6 +28,13 @@ class Place extends Model
         'approved_at',
     ];
 
+    protected static function booted(): void
+    {
+        static::deleting(function (Place $place) {
+            $place->images->each(fn (PlaceImage $image) => $image->delete());
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

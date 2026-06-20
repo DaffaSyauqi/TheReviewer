@@ -19,6 +19,15 @@ class PlaceImage extends Model
 
     protected $appends = ['url'];
 
+    protected static function booted(): void
+    {
+        static::deleting(function (PlaceImage $image) {
+            if ($image->disk && $image->path) {
+                Storage::disk($image->disk)->delete($image->path);
+            }
+        });
+    }
+
     public function place(): BelongsTo
     {
         return $this->belongsTo(Place::class);
