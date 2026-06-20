@@ -169,7 +169,7 @@ function openPlace(place: Place) {
         <Transition name="slide-left">
             <aside
                 v-if="selectedRegion"
-                class="absolute top-0 left-0 z-20 flex h-full w-full flex-col border-l bg-background shadow-xl md:w-96"
+                class="absolute top-0 left-0 z-40 flex h-full w-full flex-col border-l bg-background shadow-xl md:w-96"
             >
                 <div
                     class="flex shrink-0 items-start justify-between gap-3 border-b px-5 py-4"
