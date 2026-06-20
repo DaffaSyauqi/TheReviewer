@@ -1,2 +1,7 @@
-export { default as DialogLocationPicker } from './DialogLocationPicker.vue'
+export { default as LocationPickerDialog } from './LocationPickerDialog.vue'
 export { default as MapClickHandler } from './MapClickHandler.vue'
+export { default as ImagePreviewDialog } from './ImagePreviewDialog.vue'
+export { default as PlaceDetailDialog } from './PlaceDetailDialog.vue'
+export { default as UploadImagesDialog } from './UploadImagesDialog.vue'
+export { default as DetailInformationDialog } from './DetailInformationDialog.vue'
+export { default as TwoFactorSetupDialog } from './TwoFactorSetupDialog.vue'

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MapLibreGL from 'maplibre-gl'
 import { ref, inject, onMounted, onUnmounted, type Ref, type ComputedRef } from 'vue'
-import { Plus, Minus, Locate, Maximize, Loader2 } from 'lucide-vue-next'
+import * as LucideIcons from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 
 interface MapControlsProps {
@@ -131,7 +131,7 @@ onMounted(() => {
         type="button"
         class="flex items-center justify-center size-8 hover:bg-accent dark:hover:bg-accent/40 transition-colors border-b border-border"
       >
-        <Plus class="size-4" />
+        <LucideIcons.Plus class="size-4" />
       </button>
       <button
         @click="handleZoomOut"
@@ -139,7 +139,7 @@ onMounted(() => {
         type="button"
         class="flex items-center justify-center size-8 hover:bg-accent dark:hover:bg-accent/40 transition-colors"
       >
-        <Minus class="size-4" />
+        <LucideIcons.Minus class="size-4" />
       </button>
     </div>
 
@@ -177,8 +177,8 @@ onMounted(() => {
           waitingForLocation && 'opacity-50 pointer-events-none cursor-not-allowed'
         )"
       >
-        <Loader2 v-if="waitingForLocation" class="size-4 animate-spin" />
-        <Locate v-else class="size-4" />
+        <LucideIcons.Loader2 v-if="waitingForLocation" class="size-4 animate-spin" />
+        <LucideIcons.Locate v-else class="size-4" />
       </button>
     </div>
 
@@ -190,7 +190,7 @@ onMounted(() => {
         type="button"
         class="flex items-center justify-center size-8 hover:bg-accent dark:hover:bg-accent/40 transition-colors"
       >
-        <Maximize class="size-4" />
+        <LucideIcons.Maximize class="size-4" />
       </button>
     </div>
   </div>

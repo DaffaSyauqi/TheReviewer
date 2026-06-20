@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { LayoutDashboard, Menu, MapPinCheck } from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
@@ -57,12 +57,12 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
-        icon: LayoutDashboard,
+        icon: LucideIcons.LayoutDashboard,
     },
     {
         title: 'ModerationPlaces',
         href: '/moderation-places',
-        icon: MapPinCheck,
+        icon: LucideIcons.MapPinCheck,
     },
 ];
 </script>
@@ -80,7 +80,7 @@ const mainNavItems: NavItem[] = [
                                 size="icon"
                                 class="mr-2 h-9 w-9"
                             >
-                                <Menu class="h-5 w-5" />
+                                <LucideIcons.Menu class="h-5 w-5" />
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="left" class="w-75 p-6">

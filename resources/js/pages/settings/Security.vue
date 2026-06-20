@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
-import { ShieldCheck } from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 import { onUnmounted, ref } from 'vue';
 import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
-import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
+import { TwoFactorSetupDialog } from '@/components/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
@@ -135,7 +135,7 @@ onUnmounted(() => clearTwoFactorAuthData());
 
             <div>
                 <Button v-if="hasSetupData" @click="showSetupModal = true">
-                    <ShieldCheck />Continue setup
+                    <LucideIcons.ShieldCheck />Continue setup
                 </Button>
                 <Form
                     v-else
@@ -172,7 +172,7 @@ onUnmounted(() => clearTwoFactorAuthData());
             <TwoFactorRecoveryCodes />
         </div>
 
-        <TwoFactorSetupModal
+        <TwoFactorSetupDialog
             v-model:isOpen="showSetupModal"
             :requiresConfirmation="requiresConfirmation"
             :twoFactorEnabled="twoFactorEnabled"

@@ -8,7 +8,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import NavBar from '@/components/NavBar.vue';
 import { Map } from '@/components/map';
 import { MapIndonesia } from '@/components/map';
-import PlaceDetailDialog from '@/components/PlaceDetailDialog.vue';
+import PlaceDetailDialog from '@/components/dialog/PlaceDetailDialog.vue';
 import type { Place, ReviewCategory } from '@/types';
 
 const props = defineProps<{
@@ -87,6 +87,16 @@ const filteredPlaces = computed(() => {
     });
 });
 
+function translateLanguage() {
+    if (!selectedRegion.value) return '';
+
+    const type = selectedRegion.value.type.toLowerCase();
+    if (type === 'kota') return 'City';
+    if (type === 'kabupaten') return 'Regency';
+
+    return selectedRegion.value.type;
+}
+
 function openPlace(place: Place) {
     selectedPlace.value = place;
     placeDialogOpen.value = true;
@@ -128,7 +138,7 @@ function openPlace(place: Place) {
                         class="h-9 w-9 animate-spin rounded-full border-4 border-primary-foreground border-t-primary"
                     />
                     <p class="text-sm text-foreground">
-                        Memuat data wilayah...
+                        Loading region data...
                     </p>
                 </div>
             </div>
@@ -151,7 +161,7 @@ function openPlace(place: Place) {
                 <div
                     class="rounded-full border bg-secondary px-4 py-2 text-sm whitespace-nowrap text-secondary-foreground shadow-sm backdrop-blur-sm"
                 >
-                    Klik wilayah kota / kabupaten untuk melihat detail
+                    Click on the City/Regency area to see details
                 </div>
             </div>
         </Transition>
@@ -159,17 +169,12 @@ function openPlace(place: Place) {
         <Transition name="slide-left">
             <aside
                 v-if="selectedRegion"
-                class="absolute top-0 left-0 z-20 flex h-full w-full flex-col border-l bg-background shadow-xl md:w-96"
+                class="absolute top-0 left-0 z-40 flex h-full w-full flex-col border-l bg-background shadow-xl md:w-96"
             >
                 <div
                     class="flex shrink-0 items-start justify-between gap-3 border-b px-5 py-4"
                 >
                     <div class="min-w-0">
-                        <p
-                            class="mb-1 text-[11px] font-medium tracking-widest uppercase"
-                        >
-                            Wilayah
-                        </p>
                         <div class="flex items-center gap-2">
                             <h2
                                 class="text-base leading-tight font-semibold text-foreground"
@@ -177,18 +182,15 @@ function openPlace(place: Place) {
                                 {{ selectedRegion.city }}
                             </h2>
 
-                            <div v-if="selectedRegion.type" class="">
+                            <div>
                                 <span
                                     class="inline-flex items-center rounded-full border border-border bg-background px-2.5 py-0.5 text-xs font-medium text-primary"
                                 >
-                                    {{ selectedRegion.type }}
+                                    {{ translateLanguage() }}
                                 </span>
                             </div>
                         </div>
-                        <p
-                            v-if="selectedRegion.province"
-                            class="mt-0.5 text-sm text-muted-foreground"
-                        >
+                        <p class="mt-0.5 text-sm text-muted-foreground">
                             {{ selectedRegion.province }}
                         </p>
                     </div>

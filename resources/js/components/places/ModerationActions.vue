@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PlaceDetailsContent from './PlaceDetailsContent.vue';
+import { DetailInformationDialog, ImagePreviewDialog } from '@/components/dialog';
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
@@ -19,25 +19,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import {
-    Drawer,
-    DrawerContent,
-    DrawerHeader,
-    DrawerTitle,
-} from '@/components/ui/drawer';
-import { useMediaQuery } from '@vueuse/core';
-import {
-    MoreHorizontal,
-    ChevronLeft,
-    ChevronRight,
-    Image,
-} from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 import type { Place, PlaceImage } from '@/types';
 
 interface Props {
@@ -52,9 +34,7 @@ const openApproveDialog = ref(false);
 const openRejectDialog = ref(false);
 const openDropdown = ref(false);
 const openDetailsDialog = ref(false);
-const isDesktop = useMediaQuery('(min-width: 768px)');
 const openImageDialog = ref(false);
-const currentImageIndex = ref(0);
 
 const images = ref<PlaceImage[]>(props.place?.images || []);
 
@@ -70,27 +50,7 @@ const handleReject = () => {
     router.patch(`/moderation/places/${props.placeId}/reject`);
 };
 
-const nextImage = () => {
-    if (images.value.length > 0) {
-        currentImageIndex.value =
-            (currentImageIndex.value + 1) % images.value.length;
-    }
-};
-
-const prevImage = () => {
-    if (images.value.length > 0) {
-        currentImageIndex.value =
-            (currentImageIndex.value - 1 + images.value.length) %
-            images.value.length;
-    }
-};
-
-const selectImage = (index: number) => {
-    currentImageIndex.value = index;
-};
-
 const openImagePreview = () => {
-    currentImageIndex.value = 0;
     openImageDialog.value = true;
 };
 </script>
@@ -99,125 +59,42 @@ const openImagePreview = () => {
     <DropdownMenu v-model:open="openDropdown">
         <DropdownMenuTrigger asChild>
             <Button variant="ghost" class="h-8 w-8 p-0">
-                <MoreHorizontal class="h-4 w-4" />
+                <LucideIcons.MoreHorizontal class="h-4 w-4" />
             </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
             <DropdownMenuItem @click="openDetailsDialog = true">
+                <span><LucideIcons.List /></span>
                 View Details
             </DropdownMenuItem>
             <DropdownMenuItem @click="openImagePreview">
+                <span><LucideIcons.Image /></span>
                 Images
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem @click="openApproveDialog = true">
+                <span><LucideIcons.CircleCheck /></span>
                 Approve
             </DropdownMenuItem>
             <DropdownMenuItem @click="openRejectDialog = true">
+                <span><LucideIcons.CircleX /></span>
                 Reject
             </DropdownMenuItem>
         </DropdownMenuContent>
     </DropdownMenu>
 
-    <!-- Details Dialog (Desktop) / Drawer (Mobile) -->
-    <template v-if="isDesktop">
-        <Dialog v-model:open="openDetailsDialog">
-            <DialogContent class="max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>Detail Information</DialogTitle>
-                </DialogHeader>
-                <PlaceDetailsContent
-                    :place="place"
-                    :placeId="placeId"
-                    :placeName="placeName"
-                />
-            </DialogContent>
-        </Dialog>
-    </template>
-    <template v-else>
-        <Drawer v-model:open="openDetailsDialog">
-            <DrawerContent>
-                <DrawerHeader>
-                    <DrawerTitle>Detail Information</DrawerTitle>
-                </DrawerHeader>
-                <div class="px-4 pb-6">
-                    <PlaceDetailsContent
-                        :place="place"
-                        :placeId="placeId"
-                        :placeName="placeName"
-                    />
-                </div>
-            </DrawerContent>
-        </Drawer>
-    </template>
+    <DetailInformationDialog
+        v-model:open="openDetailsDialog"
+        :place="place"
+        :placeId="placeId"
+        :placeName="placeName"
+    />
 
     <!-- Image Preview Dialog -->
-    <Dialog v-model:open="openImageDialog">
-        <DialogContent class="max-w-2xl">
-            <DialogHeader>
-                <DialogTitle class="flex items-center gap-2">
-                    <Image class="h-5 w-5" />
-                    Image Preview
-                </DialogTitle>
-            </DialogHeader>
-
-            <div v-if="images.length > 0" class="space-y-4">
-                <div
-                    class="relative flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-black"
-                >
-                    <img
-                        :src="images[currentImageIndex].url"
-                        :alt="`Image ${currentImageIndex + 1}`"
-                        class="h-full w-full object-cover"
-                    />
-                    <button
-                        v-if="images.length > 1"
-                        @click="prevImage"
-                        class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
-                    >
-                        <ChevronLeft class="h-5 w-5" />
-                    </button>
-                    <button
-                        v-if="images.length > 1"
-                        @click="nextImage"
-                        class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
-                    >
-                        <ChevronRight class="h-5 w-5" />
-                    </button>
-                </div>
-
-                <div
-                    v-if="images.length > 1"
-                    class="flex gap-2 overflow-x-auto pb-2"
-                >
-                    <button
-                        v-for="(image, index) in images"
-                        :key="image.id"
-                        @click="selectImage(index)"
-                        class="h-20 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition-colors"
-                        :class="
-                            currentImageIndex === index
-                                ? 'border-primary'
-                                : 'border-muted'
-                        "
-                    >
-                        <img
-                            :src="image.url"
-                            :alt="`Thumbnail ${index + 1}`"
-                            class="h-full w-full object-cover"
-                        />
-                    </button>
-                </div>
-            </div>
-
-            <div v-else class="py-12 text-center">
-                <div class="mb-4 flex justify-center">
-                    <Image class="h-12 w-12 text-muted-foreground" />
-                </div>
-                <p class="text-muted-foreground">No images uploaded</p>
-            </div>
-        </DialogContent>
-    </Dialog>
+    <ImagePreviewDialog
+        v-model:open="openImageDialog"
+        :images="images"
+    />
 
     <AlertDialog v-model:open="openApproveDialog">
         <AlertDialogContent>

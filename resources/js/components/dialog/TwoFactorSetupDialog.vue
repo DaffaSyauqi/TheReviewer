@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Form } from '@inertiajs/vue3';
 import { useClipboard } from '@vueuse/core';
-import { Check, Copy, ScanLine } from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 import AlertError from '@/components/AlertError.vue';
 import InputError from '@/components/InputError.vue';
@@ -134,7 +134,7 @@ watch(
                                 class="border-b border-border last:border-b-0"
                             />
                         </div>
-                        <ScanLine
+                        <LucideIcons.ScanLine
                             class="relative z-20 size-6 text-foreground"
                         />
                     </div>
@@ -218,11 +218,11 @@ watch(
                                         @click="copy(manualSetupKey || '')"
                                         class="relative block h-auto border-l border-border px-3 hover:bg-muted"
                                     >
-                                        <Check
+                                        <LucideIcons.Check
                                             v-if="copied"
                                             class="w-4 text-green-500"
                                         />
-                                        <Copy v-else class="w-4" />
+                                        <LucideIcons.Copy v-else class="w-4" />
                                     </button>
                                 </template>
                             </div>

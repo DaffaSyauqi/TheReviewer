@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
 import { Head } from '@inertiajs/vue3';
 
 import Aside from '@/components/landing/Aside.vue';
@@ -16,22 +15,6 @@ withDefaults(
         canRegister: true,
     },
 );
-
-const mounted = ref(false);
-const mousePos = ref({ x: 0, y: 0 });
-
-const handleMouseMove = (e: MouseEvent) => {
-    mousePos.value = { x: e.clientX, y: e.clientY };
-};
-
-onMounted(() => {
-    mounted.value = true;
-    window.addEventListener('mousemove', handleMouseMove);
-});
-
-onUnmounted(() => {
-    window.removeEventListener('mousemove', handleMouseMove);
-});
 </script>
 
 <template>

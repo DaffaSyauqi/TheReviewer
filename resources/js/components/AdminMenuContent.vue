@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, router } from '@inertiajs/vue3';
-import { LogOut, Settings, LayoutDashboard, MapPinPlus } from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -37,7 +37,7 @@ defineProps<Props>();
                 href="/dashboard"
                 prefetch
             >
-                <LayoutDashboard class="mr-2 h-4 w-4" />
+                <LucideIcons.LayoutDashboard class="mr-2 h-4 w-4" />
                 Dashboard
             </Link>
         </DropdownMenuItem>
@@ -47,14 +47,14 @@ defineProps<Props>();
                 href="/manage-places/index"
                 prefetch
             >
-                <MapPinPlus class="mr-2 h-4 w-4" />
+                <LucideIcons.MapPinPlus class="mr-2 h-4 w-4" />
                 Manage Places
             </Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem :as-child="true">
             <Link class="block w-full cursor-pointer" :href="edit()" prefetch>
-                <Settings class="mr-2 h-4 w-4" />
+                <LucideIcons.Settings class="mr-2 h-4 w-4" />
                 Settings
             </Link>
         </DropdownMenuItem>
@@ -68,7 +68,7 @@ defineProps<Props>();
             as="button"
             data-test="logout-button"
         >
-            <LogOut class="mr-2 h-4 w-4" />
+            <LucideIcons.LogOut class="mr-2 h-4 w-4" />
             Log out
         </Link>
     </DropdownMenuItem>

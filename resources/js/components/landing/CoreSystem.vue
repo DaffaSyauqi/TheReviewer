@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { Map as MapIcon, Users, ShieldCheck } from 'lucide-vue-next';
+import * as LucideIcons from 'lucide-vue-next';
 
 const features = [
     {
         title: 'Spatial_Mapping',
-        icon: MapIcon,
+        icon: LucideIcons.Map,
         desc: 'Interactive digital cartography plotting user experiences across real-world coordinates.',
     },
     {
         title: 'Crowd_Synthesis',
-        icon: Users,
+        icon: LucideIcons.Users,
         desc: 'Aggregated intelligence from global contributors mapped in real-time.',
     },
     {
         title: 'Secure_Moderation',
-        icon: ShieldCheck,
+        icon: LucideIcons.ShieldCheck,
         desc: 'Submissions reviewed by admin before being published, ensuring data accuracy and spam.',
     },
 ];

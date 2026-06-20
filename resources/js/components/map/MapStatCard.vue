@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TrendingUp, TrendingDown } from 'lucide-vue-next'
+import * as LucideIcons from 'lucide-vue-next'
 import { computed } from 'vue'
 
 interface MapStatCardProps {
@@ -40,8 +40,8 @@ const changeColor = computed(() => isPositive.value ? 'text-emerald-500' : 'text
       {{ value }}
     </div>
     <div v-if="change !== undefined" class="flex items-center gap-1 mt-1">
-      <TrendingUp v-if="isPositive" :class="['size-3', changeColor]" aria-hidden="true" />
-      <TrendingDown v-else :class="['size-3', changeColor]" aria-hidden="true" />
+      <LucideIcons.TrendingUp v-if="isPositive" :class="['size-3', changeColor]" aria-hidden="true" />
+      <LucideIcons.TrendingDown v-else :class="['size-3', changeColor]" aria-hidden="true" />
       <span :class="['text-xs', changeColor]">
         {{ isPositive ? '+' : '' }}{{ change }}%
       </span>
