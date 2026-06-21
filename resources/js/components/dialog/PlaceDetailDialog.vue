@@ -37,6 +37,20 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
 
 const openImageDialog = ref(false);
 const images = computed(() => props.place?.images || []);
+const currentIndex = ref(0);
+
+const hasMultiple = computed(() => images.value.length > 1);
+
+const nextImage = () => {
+    if (!images.value.length) return;
+    currentIndex.value = (currentIndex.value + 1) % images.value.length;
+};
+
+const prevImage = () => {
+    if (!images.value.length) return;
+    currentIndex.value =
+        (currentIndex.value - 1 + images.value.length) % images.value.length;
+};
 
 const openImagePreview = () => {
     openImageDialog.value = true;
@@ -70,16 +84,32 @@ const formatValue = (value: any) => value || '-';
 
                 <div class="px-4 pb-4">
                     <div v-if="images.length > 0" class="space-y-4">
-                        <div class="relative h-72 rounded-lg bg-black">
+                        <div
+                            class="relative h-72 rounded-lg bg-black"
+                        >
                             <button
                                 @click="openImagePreview"
                                 class="h-full w-full cursor-pointer"
                             >
                                 <img
-                                    :src="images[0].url"
-                                    :alt="`Image 1`"
+                                    :src="images[currentIndex].url"
+                                    :alt="`Image ${currentIndex + 1}`"
                                     class="h-full w-full object-cover"
                                 />
+                            </button>
+                            <button
+                                v-if="hasMultiple"
+                                @click="prevImage"
+                                class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+                            >
+                                <LucideIcons.ChevronLeft class="h-5 w-5" />
+                            </button>
+                            <button
+                                v-if="hasMultiple"
+                                @click="nextImage"
+                                class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+                            >
+                                <LucideIcons.ChevronRight class="h-5 w-5" />
                             </button>
                         </div>
                     </div>
@@ -234,6 +264,7 @@ const formatValue = (value: any) => value || '-';
                     <ImagePreviewDialog
                         v-model:open="openImageDialog"
                         :images="images"
+                        :startIndex="currentIndex"
                     />
                 </div>
             </template>
@@ -257,16 +288,32 @@ const formatValue = (value: any) => value || '-';
                 <ScrollArea class="h-100 pr-6">
                     <template v-if="place">
                         <div v-if="images.length > 0" class="space-y-4">
-                            <div class="relative h-48 rounded-lg bg-black">
+                            <div
+                                class="relative h-48 rounded-lg bg-black"
+                            >
                                 <button
                                     @click="openImagePreview"
                                     class="h-full w-full cursor-pointer"
                                 >
                                     <img
-                                        :src="images[0].url"
-                                        :alt="`Image 1`"
+                                        :src="images[currentIndex].url"
+                                        :alt="`Image ${currentIndex + 1}`"
                                         class="h-full w-full object-cover"
                                     />
+                                </button>
+                                <button
+                                    v-if="hasMultiple"
+                                    @click="prevImage"
+                                    class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+                                >
+                                    <LucideIcons.ChevronLeft class="h-5 w-5" />
+                                </button>
+                                <button
+                                    v-if="hasMultiple"
+                                    @click="nextImage"
+                                    class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+                                >
+                                    <LucideIcons.ChevronRight class="h-5 w-5" />
                                 </button>
                             </div>
                         </div>
@@ -431,6 +478,7 @@ const formatValue = (value: any) => value || '-';
                         <ImagePreviewDialog
                             v-model:open="openImageDialog"
                             :images="images"
+                            :startIndex="currentIndex"
                         />
                     </template>
                 </ScrollArea>
