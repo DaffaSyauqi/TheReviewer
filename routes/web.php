@@ -13,7 +13,6 @@ Route::get('/review', [ReviewController::class, 'index'])->name('review');
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
-    Route::inertia('manage-places', 'ManagePlaces')->name('manage-places');
     Route::get('moderation-places', [ModerationController::class, 'index'])->name('moderation-places');
 });
 
