@@ -106,7 +106,9 @@ const uploadedImages = ref<
     Array<{ file: File; preview: string; name: string; size: string }>
 >([]);
 
-function onUploadImagesUpdate(images: Array<{ file: File; preview: string; name: string; size: string }>) {
+function onUploadImagesUpdate(
+    images: Array<{ file: File; preview: string; name: string; size: string }>,
+) {
     uploadedImages.value = images;
 }
 
